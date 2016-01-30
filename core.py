@@ -56,7 +56,11 @@ def dict_print(dictionary):
 			dict_print(value)
 
 
-if name == __main__:
+def obj_create(event_name, event_window, event_time, event_status):
+	print(event_name, event_window, event_time, event_status)
+
+
+if __name__ == '__main__':
 	a = key('a', 1, 1)
 	b = key('b', 2, 2)
 	c = key('c', 3, 3)

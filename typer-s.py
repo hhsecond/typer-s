@@ -1,19 +1,12 @@
 import pythoncom, pyHook, datetime
-from test import key, dict_create
+from core import key, dict_create, obj_create
 
 def OnKeyboardEventD(event):
-    print('#####################Event Down##############################')
-    print('Time:',datetime.datetime.now().strftime('%S:%f'))
-    print('WindowName:',event.WindowName)
-    print('Key:', event.Key)
-    # return True to pass the event to other handlers
+    obj_create(event.Key, event.WindowName, datetime.datetime.now().strftime('%S.%f'), 1)#3rd parameter is the position of key (down is 1)
     return True
+
 def OnKeyboardEventU(event):
-    print('****************************Event Up***************************')
-    print('Time:',datetime.datetime.now().strftime('%S:%f'))
-    print('WindowName:',event.WindowName)
-    print('Key:', event.Key)
-    # return True to pass the event to other handlers
+    obj_create(event.Key, event.WindowName, datetime.datetime.now().strftime('%S.%f'), 0)#3rd parameter is the position of key (up is 0)
     return True
 
 
@@ -28,5 +21,5 @@ def main():
     # wait forever
     pythoncom.PumpMessages()
 
-if name == __main__:
+if __name__ == '__main__':
     main()
