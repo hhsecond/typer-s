@@ -1,12 +1,12 @@
 import pythoncom, pyHook, datetime
-from core import key, dict_create, obj_create
+from core import obj_create
 
 def OnKeyboardEventD(event):
-    obj_create(event.Key, event.WindowName, datetime.datetime.now().strftime('%S.%f'), 1)#3rd parameter is the position of key (down is 1)
+    obj_create(event.Key, event.WindowName, datetime.datetime.now(), 1)#3rd parameter is the position of key (down is 1)
     return True
 
 def OnKeyboardEventU(event):
-    obj_create(event.Key, event.WindowName, datetime.datetime.now().strftime('%S.%f'), 0)#3rd parameter is the position of key (up is 0)
+    obj_create(event.Key, event.WindowName, datetime.datetime.now(), 0)#3rd parameter is the position of key (up is 0)
     return True
 
 

@@ -1,11 +1,13 @@
-#############################################################################################################################
-#This file contains the class for each key object and funciton for defining the datastructure used in thsi program          #
-#datastructure is a tree like structure in which the parent node will be the space key and each node will have 52 leaf      #
-#nodes. This 52 can be defined 26 captial letters and 26 small letters of english alphabet                                  #
-#                                                   Author: hhsecond                                                        #
-#                                          Github: github.com/hhsecond/typer-s                                              #
-#                                                   date: 1/30/2016                                                         #
-#############################################################################################################################
+###############################################################################################################################
+## This file contains the class for each key object and core funcitons for defining the datastructure used in thsi program   ##
+## datastructure is a tree like structure in which the parent node will be the space key and each node will have 52 leaf     ##
+## nodes. This 52 can be defined 26 captial letters and 26 small letters of english alphabet                                 ##
+## The object creation function is accepting values from front end and creat the object which is storing in the              ##
+## datastructure.                                                                                                            ##
+##                                                   Author: hhsecond                                                        ##
+##                                          Github: github.com/hhsecond/typer-s                                              ##
+##                                                   date: 1/30/2016                                                         ##
+###############################################################################################################################
 
 
 class key(object):
@@ -15,6 +17,8 @@ class key(object):
 		self.hold = hold #hold time for a key : (key up time - key down time)
 		self.release = release # duration between each key strokes: (previous key up time - current key down time)
 		self.name = name #key name in character rather string format:  for readability
+		
+		
 
 dicti = {}
 #trial_dict = {'a':{'b':{'c':{'d':{}}, 'e':{}}}} - Trial dictionary: datastructure will look like this if the words added are "abcd" and "abe"
@@ -57,7 +61,15 @@ def dict_print(dictionary):
 
 
 def obj_create(event_name, event_window, event_time, event_status):
-	print(event_name, event_window, event_time, event_status)
+		#fetching second and millisecond from the time
+		event_time = event_time.timestamp()
+		print(event_name, event_time, event_status)
+		
+		#vars()[event_name] = key(event_name, )
+
+
+
+
 
 
 if __name__ == '__main__':
