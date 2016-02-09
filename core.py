@@ -21,11 +21,12 @@ class key:
 		
 
 class objthread(threading.Thread):
-	"""docstring for objthread"""
-	def __init__(self, arg):
+	"""docstring for objthread - thread module calling by keystroke for creating object and adding each object to tree"""
+	def __init__(self, event_name, event_window, event_time, status):
 		threading.Thread.__init__(self)
-		
-		
+		#print(event_name, event_window, event_time, status)
+
+
 
 dicti = {}
 #trial_dict = {'a':{'b':{'c':{'d':{}}, 'e':{}}}} - Trial dictionary: datastructure will look like this if the words added are "abcd" and "abe"
