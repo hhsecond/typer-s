@@ -1,12 +1,14 @@
-import pythoncom, pyHook, datetime
+import pythoncom, pyHook, datetime, threading
 from core import objthread
 
 def OnKeyboardEventD(event):
-    objthread(event.Key, event.WindowName, datetime.datetime.now(), 1).start()#3rd parameter is the position of key (down is 1)
+    #with threading.Lock():
+    objthread(event.Key, event.WindowName, datetime.datetime.now(), 1)#3rd parameter is the position of key (down is 1)
     return True
 
 def OnKeyboardEventU(event):
-    objthread(event.Key, event.WindowName, datetime.datetime.now(), 0).start()#3rd parameter is the position of key (up is 0)
+    #with threading.Lock():
+    objthread(event.Key, event.WindowName, datetime.datetime.now(), 0)#3rd parameter is the position of key (up is 0)
     return True
 
 
