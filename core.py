@@ -40,26 +40,32 @@ def dict_create(key_list, dictionary = dicti):
 def key_to_dict(key_val, dictionary):
 	#function which is currently executing does not have other dictionary functions. kind of funcitonal programming
 	for key in dictionary:
-		if key.name == key_val.name:
-			
+		if key.name == key_val.name:			
 			key.hold = (key.hold + key_val.hold)/2
 
 			#handling cases with releasedn value is zero
 			if key.releasedn == 0.0:
-				print('0.0 --  but already in dicti', key.name)
 				key.releasedn = key_val.releasedn
 				return dictionary[key]
-			if key_val.releasedn == 0.0:
-				print('0.0 --  adding to dicti', key.name)
+			elif key_val.releasedn == 0.0:
 				return dictionary[key]				
 			else:
-				print('both has value', key.name,key.releasedn, key_val.releasedn, (key.releasedn + key_val.releasedn)/2)
 				key.releasedn = (key.releasedn + key_val.releasedn)/2
 				return dictionary[key]
-			print('same', key.name, key.releasedn)
-	print('different', key_val.name, key_val.releasedn)
 	dictionary[key_val] = {}	
 	return dictionary[key_val]
+
+
+
+class objthread(threading.Thread):
+	"""docstring for objthread - handling threads which is creating by each and every event from typer-s"""
+	def __init__(self, event_name, event_window, event_time, event_status):
+		threading.Thread.__init__(self)
+		self.start()
+
+
+
+		
 
 
 
@@ -73,46 +79,187 @@ def dict_print(dictionary):
 
 
 if __name__ == '__main__':
-	s = key('s', 0.001591, 0.0)
-	h = key('h', 0.002591, 0.003591)
-	e = key('e', 0.003591, 0.004591)
-	r = key('r', 0.004591, 0.005591)
-	i = key('i', 0.005591, 0.006591)
-	n = key('n', 0.006591, 0.007591)
-	Space = key('Space', 0.007591, 0.008591)
-	word1 = [s, h, e, r, i, n]
-	dict_create(word1)
-
-
-	m = key('m', 0.001591, 0.0)
-	e = key('e', 0.002591, 0.003591)
-	r = key('r', 0.003591, 0.004591)
-	i = key('i', 0.004591, 0.005591)
-	n = key('n', 0.005591, 0.006591)
-	Space = key('Space', 0.006591, 0.007591)
-	word1 = [m, e, r, i, n]
-	dict_create(word1)
-
-
-	s = key('s', 0.001591, 0.002591)
-	h = key('h', 0.002591, 0.003591)
-	e = key('e', 0.003591, 0.004591)
-	m = key('m', 0.004591, 0.005591)
-	i = key('i', 0.005591, 0.006591)
-	n = key('n', 0.006591, 0.007591)
-	Space = key('Space', 0.007591, 0.008591)
-	word1 = [s, h, e, m, i, n]
-	dict_create(word1)
-
-	s = key('s', 0.001591, 0.002591)
-	h = key('h', 0.002591, 0.0)
-	i = key('i', 0.002591, 0.003591)
-	j = key('j', 0.003591, 0.004591)
-	o = key('o', 0.004591, 0.005591)
-	Space = key('Space', 0.005591, 0.006591)
-	n = key('n', 0.006591, 0.007591)
-	word1 = [s, h, i, j, o]
-	dict_create(word1)
-
-#1455091742.100591
+	
+	with threading.Lock():
+		objthread('S', 'cmd.exe', 2016-02-12 15:18:42.750011, 1)
+	with threading.Lock():
+		objthread('S', 'cmd.exe', 2016-02-12 15:18:42.796885, 0)
+	with threading.Lock():
+		objthread('S', 'cmd.exe', 2016-02-12 15:18:42.906262, 1)
+	with threading.Lock():
+		objthread('S', 'cmd.exe', 2016-02-12 15:18:42.984389, 0)
+	with threading.Lock():
+		objthread('S', 'cmd.exe', 2016-02-12 15:18:43.046889, 1)
+	with threading.Lock():
+		objthread('S', 'cmd.exe', 2016-02-12 15:18:43.140638, 0)
+	with threading.Lock():
+		objthread('Escape', 'cmd.exe', 2016-02-12 15:18:43.625020, 1)
+	with threading.Lock():
+		objthread('Escape', 'cmd.exe', 2016-02-12 15:18:43.750022, 0)
+	with threading.Lock():
+		objthread('Escape', 'cmd.exe', 2016-02-12 15:18:46.256002, 1)
+	with threading.Lock():
+		objthread('Escape', 'cmd.exe', 2016-02-12 15:18:46.412238, 0)
+	with threading.Lock():
+		objthread('S', 'cmd.exe', 2016-02-12 15:19:23.097165, 1)
+	with threading.Lock():
+		objthread('S', 'cmd.exe', 2016-02-12 15:19:23.206544, 0)
+	with threading.Lock():
+		objthread('H', 'cmd.exe', 2016-02-12 15:19:23.487794, 1)
+	with threading.Lock():
+		objthread('H', 'cmd.exe', 2016-02-12 15:19:23.581547, 0)
+	with threading.Lock():
+		objthread('E', 'cmd.exe', 2016-02-12 15:19:23.909676, 1)
+	with threading.Lock():
+		objthread('E', 'cmd.exe', 2016-02-12 15:19:24.034676, 0)
+	with threading.Lock():
+		objthread('R', 'cmd.exe', 2016-02-12 15:19:24.378394, 1)
+	with threading.Lock():
+		objthread('R', 'cmd.exe', 2016-02-12 15:19:24.503375, 0)
+	with threading.Lock():
+		objthread('I', 'cmd.exe', 2016-02-12 15:19:24.789287, 1)
+	with threading.Lock():
+		objthread('I', 'cmd.exe', 2016-02-12 15:19:24.898725, 0)
+	with threading.Lock():
+		objthread('N', 'cmd.exe', 2016-02-12 15:19:25.242471, 1)
+	with threading.Lock():
+		objthread('N', 'cmd.exe', 2016-02-12 15:19:25.351853, 0)
+	with threading.Lock():
+		objthread('Space', 'cmd.exe', 2016-02-12 15:19:26.101857, 1)
+	with threading.Lock():
+		objthread('Space', 'cmd.exe', 2016-02-12 15:19:26.242483, 0)
+	with threading.Lock():
+		objthread('C', 'cmd.exe', 2016-02-12 15:19:26.554981, 1)
+	with threading.Lock():
+		objthread('C', 'cmd.exe', 2016-02-12 15:19:26.664366, 0)
+	with threading.Lock():
+		objthread('H', 'cmd.exe', 2016-02-12 15:19:26.929992, 1)
+	with threading.Lock():
+		objthread('H', 'cmd.exe', 2016-02-12 15:19:27.039367, 0)
+	with threading.Lock():
+		objthread('A', 'cmd.exe', 2016-02-12 15:19:27.304995, 1)
+	with threading.Lock():
+		objthread('A', 'cmd.exe', 2016-02-12 15:19:27.461247, 0)
+	with threading.Lock():
+		objthread('C', 'cmd.exe', 2016-02-12 15:19:27.762813, 1)
+	with threading.Lock():
+		objthread('C', 'cmd.exe', 2016-02-12 15:19:27.887822, 0)
+	with threading.Lock():
+		objthread('K', 'cmd.exe', 2016-02-12 15:19:28.200321, 1)
+	with threading.Lock():
+		objthread('K', 'cmd.exe', 2016-02-12 15:19:28.294072, 0)
+	with threading.Lock():
+		objthread('O', 'cmd.exe', 2016-02-12 15:19:28.633682, 1)
+	with threading.Lock():
+		objthread('O', 'cmd.exe', 2016-02-12 15:19:28.711867, 0)
+	with threading.Lock():
+		objthread('Space', 'cmd.exe', 2016-02-12 15:19:29.088536, 1)
+	with threading.Lock():
+		objthread('Space', 'cmd.exe', 2016-02-12 15:19:29.213588, 0)
+	with threading.Lock():
+		objthread('T', 'cmd.exe', 2016-02-12 15:19:29.541716, 1)
+	with threading.Lock():
+		objthread('T', 'cmd.exe', 2016-02-12 15:19:29.651093, 0)
+	with threading.Lock():
+		objthread('H', 'cmd.exe', 2016-02-12 15:19:29.947974, 1)
+	with threading.Lock():
+		objthread('H', 'cmd.exe', 2016-02-12 15:19:30.041725, 0)
+	with threading.Lock():
+		objthread('O', 'cmd.exe', 2016-02-12 15:19:30.494853, 1)
+	with threading.Lock():
+		objthread('O', 'cmd.exe', 2016-02-12 15:19:30.604230, 0)
+	with threading.Lock():
+		objthread('M', 'cmd.exe', 2016-02-12 15:19:30.901106, 1)
+	with threading.Lock():
+		objthread('M', 'cmd.exe', 2016-02-12 15:19:31.026116, 0)
+	with threading.Lock():
+		objthread('A', 'cmd.exe', 2016-02-12 15:19:31.244862, 1)
+	with threading.Lock():
+		objthread('A', 'cmd.exe', 2016-02-12 15:19:31.385489, 0)
+	with threading.Lock():
+		objthread('S', 'cmd.exe', 2016-02-12 15:19:31.729243, 1)
+	with threading.Lock():
+		objthread('S', 'cmd.exe', 2016-02-12 15:19:31.854251, 0)
+	with threading.Lock():
+		objthread('Space', 'cmd.exe', 2016-02-12 15:19:32.604252, 1)
+	with threading.Lock():
+		objthread('Space', 'cmd.exe', 2016-02-12 15:19:32.739848, 0)
+	with threading.Lock():
+		objthread('M', 'cmd.exe', 2016-02-12 15:19:33.083603, 1)
+	with threading.Lock():
+		objthread('M', 'cmd.exe', 2016-02-12 15:19:33.192990, 0)
+	with threading.Lock():
+		objthread('E', 'cmd.exe', 2016-02-12 15:19:33.489811, 1)
+	with threading.Lock():
+		objthread('E', 'cmd.exe', 2016-02-12 15:19:33.599234, 0)
+	with threading.Lock():
+		objthread('R', 'cmd.exe', 2016-02-12 15:19:33.880490, 1)
+	with threading.Lock():
+		objthread('R', 'cmd.exe', 2016-02-12 15:19:33.989865, 0)
+	with threading.Lock():
+		objthread('I', 'cmd.exe', 2016-02-12 15:19:34.302369, 1)
+	with threading.Lock():
+		objthread('I', 'cmd.exe', 2016-02-12 15:19:34.411746, 0)
+	with threading.Lock():
+		objthread('N', 'cmd.exe', 2016-02-12 15:19:34.692997, 1)
+	with threading.Lock():
+		objthread('N', 'cmd.exe', 2016-02-12 15:19:34.818009, 0)
+	with threading.Lock():
+		objthread('Space', 'cmd.exe', 2016-02-12 15:19:35.161753, 1)
+	with threading.Lock():
+		objthread('Space', 'cmd.exe', 2016-02-12 15:19:35.302380, 0)
+	with threading.Lock():
+		objthread('S', 'cmd.exe', 2016-02-12 15:19:35.614884, 1)
+	with threading.Lock():
+		objthread('S', 'cmd.exe', 2016-02-12 15:19:35.724260, 0)
+	with threading.Lock():
+		objthread('H', 'cmd.exe', 2016-02-12 15:19:36.052389, 1)
+	with threading.Lock():
+		objthread('H', 'cmd.exe', 2016-02-12 15:19:36.166664, 0)
+	with threading.Lock():
+		objthread('I', 'cmd.exe', 2016-02-12 15:19:37.095054, 1)
+	with threading.Lock():
+		objthread('I', 'cmd.exe', 2016-02-12 15:19:37.204428, 0)
+	with threading.Lock():
+		objthread('M', 'cmd.exe', 2016-02-12 15:19:37.548182, 1)
+	with threading.Lock():
+		objthread('M', 'cmd.exe', 2016-02-12 15:19:37.688808, 0)
+	with threading.Lock():
+		objthread('I', 'cmd.exe', 2016-02-12 15:19:37.965571, 1)
+	with threading.Lock():
+		objthread('I', 'cmd.exe', 2016-02-12 15:19:38.106200, 0)
+	with threading.Lock():
+		objthread('N', 'cmd.exe', 2016-02-12 15:19:38.403077, 1)
+	with threading.Lock():
+		objthread('N', 'cmd.exe', 2016-02-12 15:19:38.528082, 0)
+	with threading.Lock():
+		objthread('Space', 'cmd.exe', 2016-02-12 15:19:38.856179, 1)
+	with threading.Lock():
+		objthread('Space', 'cmd.exe', 2016-02-12 15:19:38.996834, 0)
+	with threading.Lock():
+		objthread('S', 'cmd.exe', 2016-02-12 15:19:39.278092, 1)
+	with threading.Lock():
+		objthread('S', 'cmd.exe', 2016-02-12 15:19:39.371838, 0)
+	with threading.Lock():
+		objthread('H', 'cmd.exe', 2016-02-12 15:19:39.715592, 1)
+	with threading.Lock():
+		objthread('H', 'cmd.exe', 2016-02-12 15:19:39.824968, 0)
+	with threading.Lock():
+		objthread('I', 'cmd.exe', 2016-02-12 15:19:40.106221, 1)
+	with threading.Lock():
+		objthread('I', 'cmd.exe', 2016-02-12 15:19:40.215598, 0)
+	with threading.Lock():
+		objthread('N', 'cmd.exe', 2016-02-12 15:19:40.496851, 1)
+	with threading.Lock():
+		objthread('N', 'cmd.exe', 2016-02-12 15:19:40.606228, 0)
+	with threading.Lock():
+		objthread('J', 'cmd.exe', 2016-02-12 15:19:40.924614, 1)
+	with threading.Lock():
+		objthread('J', 'cmd.exe', 2016-02-12 15:19:41.018358, 0)
+	with threading.Lock():
+		objthread('O', 'cmd.exe', 2016-02-12 15:19:41.393364, 1)
+	with threading.Lock():
+		objthread('O', 'cmd.exe', 2016-02-12 15:19:41.502741, 0)
+	with threading.Lock():
+		objthread('Escape', 'cmd.exe', 2016-02-12 15:19:43.891825, 
 	dict_print(dicti)
