@@ -63,17 +63,19 @@ class objthread(threading.Thread):
 		threading.Thread.__init__(self)
 		self.start()
 		etime = event_time.timestamp()
+		global counter
 
 		if event_status == 1:
 			counter += 1
+			print(dict_counter)
+			#how the script is printing dict_counter without declaring the value inside? its not a global variable
 			dict_counter[event_name] = counter
 			dict_time_args[counter] = [etime]
 		else:
 			curr_count = dict_counter[event_name]
 			dict_time_args[curr_count].append(etime)
-			print(curr_count)
-			print(dict_time_args)
-			
+
+
 		
 
 
