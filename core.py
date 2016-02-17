@@ -93,6 +93,10 @@ class objthread_up(threading.Thread):
 		vars()[event_name] = key(event_name, curr_hold, curr_releasedn)
 		key_dict[curr_count] = vars()[event_name]
 
+		if event_name == 'Space':
+			dict_create(key_dict)
+
+
 
 
 
