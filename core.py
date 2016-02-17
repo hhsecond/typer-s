@@ -17,7 +17,7 @@ dicti = {}
 dict_time_args = {0:[0.0, 0.0]}
 dict_counter = {'Space':0}
 counter = 0
-key_list = []
+key_dict = {}
 
 
 class key:
@@ -31,9 +31,9 @@ class key:
 
 #function creates dictionary which will accept a word at a time as a list of characters
 #dictionary = dicti, fetching the main dictionary if no dictionary specified in the function call
-def dict_create(key_list, dictionary = dicti):
+def dict_create(key_dict, dictionary = dicti):
 	#fetching each key and sending to the dict create function
-	for key_val in key_list:
+	for key_val in key_dict:
 		dictionary = key_to_dict(key_val, dictionary) #returning dictionary recursively
 
 
@@ -57,23 +57,43 @@ def key_to_dict(key_val, dictionary):
 
 
 
-class objthread(threading.Thread):
-	"""docstring for objthread - handling threads which is creating by each and every event from typer-s"""
-	def __init__(self, event_name, event_window, event_time, event_status):
+class objthread_down(threading.Thread):
+	"""docstring for objthread - handling threads which is creating by key down event from typer-s"""
+	def __init__(self, event_name, event_window, event_time):
 		threading.Thread.__init__(self)
 		self.start()
+		if event_name == 'Escape':
+			exit()
 		etime = event_time.timestamp()
 		global counter
 
-		if event_status == 1:
-			counter += 1
-			print(dict_counter)
-			#how the script is printing dict_counter without declaring the value inside? its not a global variable
-			dict_counter[event_name] = counter
-			dict_time_args[counter] = [etime]
+		counter += 1
+		dict_counter[event_name] = counter
+		dict_time_args[counter] = [etime]
+
+
+
+class objthread_up(threading.Thread):
+	"""docstring for objthread - handling threads which is creating by key up event from typer-s"""
+	def __init__(self, event_name, event_window, event_time):
+		threading.Thread.__init__(self)
+		self.start()
+		etime = event_time.timestamp()
+		print(event_name)
+
+		curr_count = dict_counter[event_name]
+		dict_time_args[curr_count].append(etime)
+
+		curr_hold = etime - dict_time_args[curr_count][0]#curr_up_time - curr_down_time
+		if dict_time_args[curr_count - 1][0]:
+			curr_releasedn = dict_time_args[curr_count][0] - dict_time_args[curr_count - 1][0]#curr_down_time - prev_down_time
 		else:
-			curr_count = dict_counter[event_name]
-			dict_time_args[curr_count].append(etime)
+			curr_releasedn = 0.0
+		#print(curr_hold, curr_releasedn)
+		vars()[event_name] = key(event_name, curr_hold, curr_releasedn)
+		key_dict[curr_count] = vars()[event_name]
+
+
 
 
 		
@@ -97,185 +117,171 @@ if __name__ == '__main__':
 	from datetime import datetime
 	
 	with threading.Lock():
-		objthread('S', 'cmd.exe', datetime.strptime('2016-02-12 15:18:42.750011', '%Y-%m-%d %H:%M:%S.%f'), 1)
+		objthread_down('S', 'cmd.exe', datetime.strptime('2016-02-12 15:19:23.097165', '%Y-%m-%d %H:%M:%S.%f'))#this is down
 	with threading.Lock():
-		objthread('S', 'cmd.exe', datetime.strptime('2016-02-12 15:18:42.796885', '%Y-%m-%d %H:%M:%S.%f'), 0)
+		objthread_down('H', 'cmd.exe', datetime.strptime('2016-02-12 15:19:23.487794', '%Y-%m-%d %H:%M:%S.%f'))#this is down
+
+
 	with threading.Lock():
-		objthread('S', 'cmd.exe', datetime.strptime('2016-02-12 15:18:42.906262', '%Y-%m-%d %H:%M:%S.%f'), 1)
+		objthread_up('S', 'cmd.exe', datetime.strptime('2016-02-12 15:19:23.206544', '%Y-%m-%d %H:%M:%S.%f'))
 	with threading.Lock():
-		objthread('S', 'cmd.exe', datetime.strptime('2016-02-12 15:18:42.984389', '%Y-%m-%d %H:%M:%S.%f'), 0)
+		objthread_up('H', 'cmd.exe', datetime.strptime('2016-02-12 15:19:23.581547', '%Y-%m-%d %H:%M:%S.%f'))
+
 	with threading.Lock():
-		objthread('S', 'cmd.exe', datetime.strptime('2016-02-12 15:18:43.046889', '%Y-%m-%d %H:%M:%S.%f'), 1)
+		objthread_down('Escape', 'cmd.exe', datetime.strptime('2016-02-12 15:19:43.891825', '%Y-%m-%d %H:%M:%S.%f'))#this is down
+
 	with threading.Lock():
-		objthread('S', 'cmd.exe', datetime.strptime('2016-02-12 15:18:43.140638', '%Y-%m-%d %H:%M:%S.%f'), 0)
+		objthread_down('E', 'cmd.exe', datetime.strptime('2016-02-12 15:19:23.909676', '%Y-%m-%d %H:%M:%S.%f'))#this is down
 	with threading.Lock():
-		objthread('Escape', 'cmd.exe', datetime.strptime('2016-02-12 15:18:43.625020', '%Y-%m-%d %H:%M:%S.%f'), 1)
+		objthread_up('E', 'cmd.exe', datetime.strptime('2016-02-12 15:19:24.034676', '%Y-%m-%d %H:%M:%S.%f'))
 	with threading.Lock():
-		objthread('Escape', 'cmd.exe', datetime.strptime('2016-02-12 15:18:43.750022', '%Y-%m-%d %H:%M:%S.%f'), 0)
+		objthread_down('R', 'cmd.exe', datetime.strptime('2016-02-12 15:19:24.378394', '%Y-%m-%d %H:%M:%S.%f'))#this is down
 	with threading.Lock():
-		objthread('Escape', 'cmd.exe', datetime.strptime('2016-02-12 15:18:46.256002', '%Y-%m-%d %H:%M:%S.%f'), 1)
+		objthread_up('R', 'cmd.exe', datetime.strptime('2016-02-12 15:19:24.503375', '%Y-%m-%d %H:%M:%S.%f'))
 	with threading.Lock():
-		objthread('Escape', 'cmd.exe', datetime.strptime('2016-02-12 15:18:46.412238', '%Y-%m-%d %H:%M:%S.%f'), 0)
+		objthread_down('I', 'cmd.exe', datetime.strptime('2016-02-12 15:19:24.789287', '%Y-%m-%d %H:%M:%S.%f'))#this is down
 	with threading.Lock():
-		objthread('S', 'cmd.exe', datetime.strptime('2016-02-12 15:19:23.097165', '%Y-%m-%d %H:%M:%S.%f'), 1)
+		objthread_up('I', 'cmd.exe', datetime.strptime('2016-02-12 15:19:24.898725', '%Y-%m-%d %H:%M:%S.%f'))
 	with threading.Lock():
-		objthread('S', 'cmd.exe', datetime.strptime('2016-02-12 15:19:23.206544', '%Y-%m-%d %H:%M:%S.%f'), 0)
+		objthread_down('N', 'cmd.exe', datetime.strptime('2016-02-12 15:19:25.242471', '%Y-%m-%d %H:%M:%S.%f'))#this is down
 	with threading.Lock():
-		objthread('H', 'cmd.exe', datetime.strptime('2016-02-12 15:19:23.487794', '%Y-%m-%d %H:%M:%S.%f'), 1)
+		objthread_up('N', 'cmd.exe', datetime.strptime('2016-02-12 15:19:25.351853', '%Y-%m-%d %H:%M:%S.%f'))
 	with threading.Lock():
-		objthread('H', 'cmd.exe', datetime.strptime('2016-02-12 15:19:23.581547', '%Y-%m-%d %H:%M:%S.%f'), 0)
+		objthread_down('Space', 'cmd.exe', datetime.strptime('2016-02-12 15:19:26.101857', '%Y-%m-%d %H:%M:%S.%f'))#this is down
 	with threading.Lock():
-		objthread('E', 'cmd.exe', datetime.strptime('2016-02-12 15:19:23.909676', '%Y-%m-%d %H:%M:%S.%f'), 1)
+		objthread_up('Space', 'cmd.exe', datetime.strptime('2016-02-12 15:19:26.242483', '%Y-%m-%d %H:%M:%S.%f'))
 	with threading.Lock():
-		objthread('E', 'cmd.exe', datetime.strptime('2016-02-12 15:19:24.034676', '%Y-%m-%d %H:%M:%S.%f'), 0)
+		objthread_down('C', 'cmd.exe', datetime.strptime('2016-02-12 15:19:26.554981', '%Y-%m-%d %H:%M:%S.%f'))#this is down
 	with threading.Lock():
-		objthread('R', 'cmd.exe', datetime.strptime('2016-02-12 15:19:24.378394', '%Y-%m-%d %H:%M:%S.%f'), 1)
+		objthread_up('C', 'cmd.exe', datetime.strptime('2016-02-12 15:19:26.664366', '%Y-%m-%d %H:%M:%S.%f'))
 	with threading.Lock():
-		objthread('R', 'cmd.exe', datetime.strptime('2016-02-12 15:19:24.503375', '%Y-%m-%d %H:%M:%S.%f'), 0)
+		objthread_down('H', 'cmd.exe', datetime.strptime('2016-02-12 15:19:26.929992', '%Y-%m-%d %H:%M:%S.%f'))#this is down
 	with threading.Lock():
-		objthread('I', 'cmd.exe', datetime.strptime('2016-02-12 15:19:24.789287', '%Y-%m-%d %H:%M:%S.%f'), 1)
+		objthread_up('H', 'cmd.exe', datetime.strptime('2016-02-12 15:19:27.039367', '%Y-%m-%d %H:%M:%S.%f'))
 	with threading.Lock():
-		objthread('I', 'cmd.exe', datetime.strptime('2016-02-12 15:19:24.898725', '%Y-%m-%d %H:%M:%S.%f'), 0)
+		objthread_down('A', 'cmd.exe', datetime.strptime('2016-02-12 15:19:27.304995', '%Y-%m-%d %H:%M:%S.%f'))#this is down
 	with threading.Lock():
-		objthread('N', 'cmd.exe', datetime.strptime('2016-02-12 15:19:25.242471', '%Y-%m-%d %H:%M:%S.%f'), 1)
+		objthread_up('A', 'cmd.exe', datetime.strptime('2016-02-12 15:19:27.461247', '%Y-%m-%d %H:%M:%S.%f'))
 	with threading.Lock():
-		objthread('N', 'cmd.exe', datetime.strptime('2016-02-12 15:19:25.351853', '%Y-%m-%d %H:%M:%S.%f'), 0)
+		objthread_down('C', 'cmd.exe', datetime.strptime('2016-02-12 15:19:27.762813', '%Y-%m-%d %H:%M:%S.%f'))#this is down
 	with threading.Lock():
-		objthread('Space', 'cmd.exe', datetime.strptime('2016-02-12 15:19:26.101857', '%Y-%m-%d %H:%M:%S.%f'), 1)
+		objthread_up('C', 'cmd.exe', datetime.strptime('2016-02-12 15:19:27.887822', '%Y-%m-%d %H:%M:%S.%f'))
 	with threading.Lock():
-		objthread('Space', 'cmd.exe', datetime.strptime('2016-02-12 15:19:26.242483', '%Y-%m-%d %H:%M:%S.%f'), 0)
+		objthread_down('K', 'cmd.exe', datetime.strptime('2016-02-12 15:19:28.200321', '%Y-%m-%d %H:%M:%S.%f'))#this is down
 	with threading.Lock():
-		objthread('C', 'cmd.exe', datetime.strptime('2016-02-12 15:19:26.554981', '%Y-%m-%d %H:%M:%S.%f'), 1)
+		objthread_up('K', 'cmd.exe', datetime.strptime('2016-02-12 15:19:28.294072', '%Y-%m-%d %H:%M:%S.%f'))
 	with threading.Lock():
-		objthread('C', 'cmd.exe', datetime.strptime('2016-02-12 15:19:26.664366', '%Y-%m-%d %H:%M:%S.%f'), 0)
+		objthread_down('O', 'cmd.exe', datetime.strptime('2016-02-12 15:19:28.633682', '%Y-%m-%d %H:%M:%S.%f'))#this is down
 	with threading.Lock():
-		objthread('H', 'cmd.exe', datetime.strptime('2016-02-12 15:19:26.929992', '%Y-%m-%d %H:%M:%S.%f'), 1)
+		objthread_up('O', 'cmd.exe', datetime.strptime('2016-02-12 15:19:28.711867', '%Y-%m-%d %H:%M:%S.%f'))
 	with threading.Lock():
-		objthread('H', 'cmd.exe', datetime.strptime('2016-02-12 15:19:27.039367', '%Y-%m-%d %H:%M:%S.%f'), 0)
+		objthread_down('Space', 'cmd.exe', datetime.strptime('2016-02-12 15:19:29.088536', '%Y-%m-%d %H:%M:%S.%f'))#this is down
 	with threading.Lock():
-		objthread('A', 'cmd.exe', datetime.strptime('2016-02-12 15:19:27.304995', '%Y-%m-%d %H:%M:%S.%f'), 1)
+		objthread_up('Space', 'cmd.exe', datetime.strptime('2016-02-12 15:19:29.213588', '%Y-%m-%d %H:%M:%S.%f'))
 	with threading.Lock():
-		objthread('A', 'cmd.exe', datetime.strptime('2016-02-12 15:19:27.461247', '%Y-%m-%d %H:%M:%S.%f'), 0)
+		objthread_down('T', 'cmd.exe', datetime.strptime('2016-02-12 15:19:29.541716', '%Y-%m-%d %H:%M:%S.%f'))#this is down
 	with threading.Lock():
-		objthread('C', 'cmd.exe', datetime.strptime('2016-02-12 15:19:27.762813', '%Y-%m-%d %H:%M:%S.%f'), 1)
+		objthread_up('T', 'cmd.exe', datetime.strptime('2016-02-12 15:19:29.651093', '%Y-%m-%d %H:%M:%S.%f'))
 	with threading.Lock():
-		objthread('C', 'cmd.exe', datetime.strptime('2016-02-12 15:19:27.887822', '%Y-%m-%d %H:%M:%S.%f'), 0)
+		objthread_down('H', 'cmd.exe', datetime.strptime('2016-02-12 15:19:29.947974', '%Y-%m-%d %H:%M:%S.%f'))#this is down
 	with threading.Lock():
-		objthread('K', 'cmd.exe', datetime.strptime('2016-02-12 15:19:28.200321', '%Y-%m-%d %H:%M:%S.%f'), 1)
+		objthread_up('H', 'cmd.exe', datetime.strptime('2016-02-12 15:19:30.041725', '%Y-%m-%d %H:%M:%S.%f'))
 	with threading.Lock():
-		objthread('K', 'cmd.exe', datetime.strptime('2016-02-12 15:19:28.294072', '%Y-%m-%d %H:%M:%S.%f'), 0)
+		objthread_down('O', 'cmd.exe', datetime.strptime('2016-02-12 15:19:30.494853', '%Y-%m-%d %H:%M:%S.%f'))#this is down
 	with threading.Lock():
-		objthread('O', 'cmd.exe', datetime.strptime('2016-02-12 15:19:28.633682', '%Y-%m-%d %H:%M:%S.%f'), 1)
+		objthread_up('O', 'cmd.exe', datetime.strptime('2016-02-12 15:19:30.604230', '%Y-%m-%d %H:%M:%S.%f'))
 	with threading.Lock():
-		objthread('O', 'cmd.exe', datetime.strptime('2016-02-12 15:19:28.711867', '%Y-%m-%d %H:%M:%S.%f'), 0)
+		objthread_down('M', 'cmd.exe', datetime.strptime('2016-02-12 15:19:30.901106', '%Y-%m-%d %H:%M:%S.%f'))#this is down
 	with threading.Lock():
-		objthread('Space', 'cmd.exe', datetime.strptime('2016-02-12 15:19:29.088536', '%Y-%m-%d %H:%M:%S.%f'), 1)
+		objthread_up('M', 'cmd.exe', datetime.strptime('2016-02-12 15:19:31.026116', '%Y-%m-%d %H:%M:%S.%f'))
 	with threading.Lock():
-		objthread('Space', 'cmd.exe', datetime.strptime('2016-02-12 15:19:29.213588', '%Y-%m-%d %H:%M:%S.%f'), 0)
+		objthread_down('A', 'cmd.exe', datetime.strptime('2016-02-12 15:19:31.244862', '%Y-%m-%d %H:%M:%S.%f'))#this is down
 	with threading.Lock():
-		objthread('T', 'cmd.exe', datetime.strptime('2016-02-12 15:19:29.541716', '%Y-%m-%d %H:%M:%S.%f'), 1)
+		objthread_up('A', 'cmd.exe', datetime.strptime('2016-02-12 15:19:31.385489', '%Y-%m-%d %H:%M:%S.%f'))
 	with threading.Lock():
-		objthread('T', 'cmd.exe', datetime.strptime('2016-02-12 15:19:29.651093', '%Y-%m-%d %H:%M:%S.%f'), 0)
+		objthread_down('S', 'cmd.exe', datetime.strptime('2016-02-12 15:19:31.729243', '%Y-%m-%d %H:%M:%S.%f'))#this is down
 	with threading.Lock():
-		objthread('H', 'cmd.exe', datetime.strptime('2016-02-12 15:19:29.947974', '%Y-%m-%d %H:%M:%S.%f'), 1)
+		objthread_up('S', 'cmd.exe', datetime.strptime('2016-02-12 15:19:31.854251', '%Y-%m-%d %H:%M:%S.%f'))
 	with threading.Lock():
-		objthread('H', 'cmd.exe', datetime.strptime('2016-02-12 15:19:30.041725', '%Y-%m-%d %H:%M:%S.%f'), 0)
+		objthread_down('Space', 'cmd.exe', datetime.strptime('2016-02-12 15:19:32.604252', '%Y-%m-%d %H:%M:%S.%f'))#this is down
 	with threading.Lock():
-		objthread('O', 'cmd.exe', datetime.strptime('2016-02-12 15:19:30.494853', '%Y-%m-%d %H:%M:%S.%f'), 1)
+		objthread_up('Space', 'cmd.exe', datetime.strptime('2016-02-12 15:19:32.739848', '%Y-%m-%d %H:%M:%S.%f'))
 	with threading.Lock():
-		objthread('O', 'cmd.exe', datetime.strptime('2016-02-12 15:19:30.604230', '%Y-%m-%d %H:%M:%S.%f'), 0)
+		objthread_down('M', 'cmd.exe', datetime.strptime('2016-02-12 15:19:33.083603', '%Y-%m-%d %H:%M:%S.%f'))#this is down
 	with threading.Lock():
-		objthread('M', 'cmd.exe', datetime.strptime('2016-02-12 15:19:30.901106', '%Y-%m-%d %H:%M:%S.%f'), 1)
+		objthread_up('M', 'cmd.exe', datetime.strptime('2016-02-12 15:19:33.192990', '%Y-%m-%d %H:%M:%S.%f'))
 	with threading.Lock():
-		objthread('M', 'cmd.exe', datetime.strptime('2016-02-12 15:19:31.026116', '%Y-%m-%d %H:%M:%S.%f'), 0)
+		objthread_down('E', 'cmd.exe', datetime.strptime('2016-02-12 15:19:33.489811', '%Y-%m-%d %H:%M:%S.%f'))#this is down
 	with threading.Lock():
-		objthread('A', 'cmd.exe', datetime.strptime('2016-02-12 15:19:31.244862', '%Y-%m-%d %H:%M:%S.%f'), 1)
+		objthread_up('E', 'cmd.exe', datetime.strptime('2016-02-12 15:19:33.599234', '%Y-%m-%d %H:%M:%S.%f'))
 	with threading.Lock():
-		objthread('A', 'cmd.exe', datetime.strptime('2016-02-12 15:19:31.385489', '%Y-%m-%d %H:%M:%S.%f'), 0)
+		objthread_down('R', 'cmd.exe', datetime.strptime('2016-02-12 15:19:33.880490', '%Y-%m-%d %H:%M:%S.%f'))#this is down
 	with threading.Lock():
-		objthread('S', 'cmd.exe', datetime.strptime('2016-02-12 15:19:31.729243', '%Y-%m-%d %H:%M:%S.%f'), 1)
+		objthread_up('R', 'cmd.exe', datetime.strptime('2016-02-12 15:19:33.989865', '%Y-%m-%d %H:%M:%S.%f'))
 	with threading.Lock():
-		objthread('S', 'cmd.exe', datetime.strptime('2016-02-12 15:19:31.854251', '%Y-%m-%d %H:%M:%S.%f'), 0)
+		objthread_down('I', 'cmd.exe', datetime.strptime('2016-02-12 15:19:34.302369', '%Y-%m-%d %H:%M:%S.%f'))#this is down
 	with threading.Lock():
-		objthread('Space', 'cmd.exe', datetime.strptime('2016-02-12 15:19:32.604252', '%Y-%m-%d %H:%M:%S.%f'), 1)
+		objthread_up('I', 'cmd.exe', datetime.strptime('2016-02-12 15:19:34.411746', '%Y-%m-%d %H:%M:%S.%f'))
 	with threading.Lock():
-		objthread('Space', 'cmd.exe', datetime.strptime('2016-02-12 15:19:32.739848', '%Y-%m-%d %H:%M:%S.%f'), 0)
+		objthread_down('N', 'cmd.exe', datetime.strptime('2016-02-12 15:19:34.692997', '%Y-%m-%d %H:%M:%S.%f'))#this is down
 	with threading.Lock():
-		objthread('M', 'cmd.exe', datetime.strptime('2016-02-12 15:19:33.083603', '%Y-%m-%d %H:%M:%S.%f'), 1)
+		objthread_up('N', 'cmd.exe', datetime.strptime('2016-02-12 15:19:34.818009', '%Y-%m-%d %H:%M:%S.%f'))
 	with threading.Lock():
-		objthread('M', 'cmd.exe', datetime.strptime('2016-02-12 15:19:33.192990', '%Y-%m-%d %H:%M:%S.%f'), 0)
+		objthread_down('Space', 'cmd.exe', datetime.strptime('2016-02-12 15:19:35.161753', '%Y-%m-%d %H:%M:%S.%f'))#this is down
 	with threading.Lock():
-		objthread('E', 'cmd.exe', datetime.strptime('2016-02-12 15:19:33.489811', '%Y-%m-%d %H:%M:%S.%f'), 1)
+		objthread_up('Space', 'cmd.exe', datetime.strptime('2016-02-12 15:19:35.302380', '%Y-%m-%d %H:%M:%S.%f'))
 	with threading.Lock():
-		objthread('E', 'cmd.exe', datetime.strptime('2016-02-12 15:19:33.599234', '%Y-%m-%d %H:%M:%S.%f'), 0)
+		objthread_down('S', 'cmd.exe', datetime.strptime('2016-02-12 15:19:35.614884', '%Y-%m-%d %H:%M:%S.%f'))#this is down
 	with threading.Lock():
-		objthread('R', 'cmd.exe', datetime.strptime('2016-02-12 15:19:33.880490', '%Y-%m-%d %H:%M:%S.%f'), 1)
+		objthread_up('S', 'cmd.exe', datetime.strptime('2016-02-12 15:19:35.724260', '%Y-%m-%d %H:%M:%S.%f'))
 	with threading.Lock():
-		objthread('R', 'cmd.exe', datetime.strptime('2016-02-12 15:19:33.989865', '%Y-%m-%d %H:%M:%S.%f'), 0)
+		objthread_down('H', 'cmd.exe', datetime.strptime('2016-02-12 15:19:36.052389', '%Y-%m-%d %H:%M:%S.%f'))#this is down
 	with threading.Lock():
-		objthread('I', 'cmd.exe', datetime.strptime('2016-02-12 15:19:34.302369', '%Y-%m-%d %H:%M:%S.%f'), 1)
+		objthread_up('H', 'cmd.exe', datetime.strptime('2016-02-12 15:19:36.166664', '%Y-%m-%d %H:%M:%S.%f'))
 	with threading.Lock():
-		objthread('I', 'cmd.exe', datetime.strptime('2016-02-12 15:19:34.411746', '%Y-%m-%d %H:%M:%S.%f'), 0)
+		objthread_down('I', 'cmd.exe', datetime.strptime('2016-02-12 15:19:37.095054', '%Y-%m-%d %H:%M:%S.%f'))#this is down
 	with threading.Lock():
-		objthread('N', 'cmd.exe', datetime.strptime('2016-02-12 15:19:34.692997', '%Y-%m-%d %H:%M:%S.%f'), 1)
+		objthread_up('I', 'cmd.exe', datetime.strptime('2016-02-12 15:19:37.204428', '%Y-%m-%d %H:%M:%S.%f'))
 	with threading.Lock():
-		objthread('N', 'cmd.exe', datetime.strptime('2016-02-12 15:19:34.818009', '%Y-%m-%d %H:%M:%S.%f'), 0)
+		objthread_down('M', 'cmd.exe', datetime.strptime('2016-02-12 15:19:37.548182', '%Y-%m-%d %H:%M:%S.%f'))#this is down
 	with threading.Lock():
-		objthread('Space', 'cmd.exe', datetime.strptime('2016-02-12 15:19:35.161753', '%Y-%m-%d %H:%M:%S.%f'), 1)
+		objthread_up('M', 'cmd.exe', datetime.strptime('2016-02-12 15:19:37.688808', '%Y-%m-%d %H:%M:%S.%f'))
 	with threading.Lock():
-		objthread('Space', 'cmd.exe', datetime.strptime('2016-02-12 15:19:35.302380', '%Y-%m-%d %H:%M:%S.%f'), 0)
+		objthread_down('I', 'cmd.exe', datetime.strptime('2016-02-12 15:19:37.965571', '%Y-%m-%d %H:%M:%S.%f'))#this is down
 	with threading.Lock():
-		objthread('S', 'cmd.exe', datetime.strptime('2016-02-12 15:19:35.614884', '%Y-%m-%d %H:%M:%S.%f'), 1)
+		objthread_up('I', 'cmd.exe', datetime.strptime('2016-02-12 15:19:38.106200', '%Y-%m-%d %H:%M:%S.%f'))
 	with threading.Lock():
-		objthread('S', 'cmd.exe', datetime.strptime('2016-02-12 15:19:35.724260', '%Y-%m-%d %H:%M:%S.%f'), 0)
+		objthread_down('N', 'cmd.exe', datetime.strptime('2016-02-12 15:19:38.403077', '%Y-%m-%d %H:%M:%S.%f'))#this is down
 	with threading.Lock():
-		objthread('H', 'cmd.exe', datetime.strptime('2016-02-12 15:19:36.052389', '%Y-%m-%d %H:%M:%S.%f'), 1)
+		objthread_up('N', 'cmd.exe', datetime.strptime('2016-02-12 15:19:38.528082', '%Y-%m-%d %H:%M:%S.%f'))
 	with threading.Lock():
-		objthread('H', 'cmd.exe', datetime.strptime('2016-02-12 15:19:36.166664', '%Y-%m-%d %H:%M:%S.%f'), 0)
+		objthread_down('Space', 'cmd.exe', datetime.strptime('2016-02-12 15:19:38.856179', '%Y-%m-%d %H:%M:%S.%f'))#this is down
 	with threading.Lock():
-		objthread('I', 'cmd.exe', datetime.strptime('2016-02-12 15:19:37.095054', '%Y-%m-%d %H:%M:%S.%f'), 1)
+		objthread_up('Space', 'cmd.exe', datetime.strptime('2016-02-12 15:19:38.996834', '%Y-%m-%d %H:%M:%S.%f'))
 	with threading.Lock():
-		objthread('I', 'cmd.exe', datetime.strptime('2016-02-12 15:19:37.204428', '%Y-%m-%d %H:%M:%S.%f'), 0)
+		objthread_down('S', 'cmd.exe', datetime.strptime('2016-02-12 15:19:39.278092', '%Y-%m-%d %H:%M:%S.%f'))#this is down
 	with threading.Lock():
-		objthread('M', 'cmd.exe', datetime.strptime('2016-02-12 15:19:37.548182', '%Y-%m-%d %H:%M:%S.%f'), 1)
+		objthread_up('S', 'cmd.exe', datetime.strptime('2016-02-12 15:19:39.371838', '%Y-%m-%d %H:%M:%S.%f'))
 	with threading.Lock():
-		objthread('M', 'cmd.exe', datetime.strptime('2016-02-12 15:19:37.688808', '%Y-%m-%d %H:%M:%S.%f'), 0)
+		objthread_down('H', 'cmd.exe', datetime.strptime('2016-02-12 15:19:39.715592', '%Y-%m-%d %H:%M:%S.%f'))#this is down
 	with threading.Lock():
-		objthread('I', 'cmd.exe', datetime.strptime('2016-02-12 15:19:37.965571', '%Y-%m-%d %H:%M:%S.%f'), 1)
+		objthread_up('H', 'cmd.exe', datetime.strptime('2016-02-12 15:19:39.824968', '%Y-%m-%d %H:%M:%S.%f'))
 	with threading.Lock():
-		objthread('I', 'cmd.exe', datetime.strptime('2016-02-12 15:19:38.106200', '%Y-%m-%d %H:%M:%S.%f'), 0)
+		objthread_down('I', 'cmd.exe', datetime.strptime('2016-02-12 15:19:40.106221', '%Y-%m-%d %H:%M:%S.%f'))#this is down
 	with threading.Lock():
-		objthread('N', 'cmd.exe', datetime.strptime('2016-02-12 15:19:38.403077', '%Y-%m-%d %H:%M:%S.%f'), 1)
+		objthread_up('I', 'cmd.exe', datetime.strptime('2016-02-12 15:19:40.215598', '%Y-%m-%d %H:%M:%S.%f'))
 	with threading.Lock():
-		objthread('N', 'cmd.exe', datetime.strptime('2016-02-12 15:19:38.528082', '%Y-%m-%d %H:%M:%S.%f'), 0)
+		objthread_down('N', 'cmd.exe', datetime.strptime('2016-02-12 15:19:40.496851', '%Y-%m-%d %H:%M:%S.%f'))#this is down
 	with threading.Lock():
-		objthread('Space', 'cmd.exe', datetime.strptime('2016-02-12 15:19:38.856179', '%Y-%m-%d %H:%M:%S.%f'), 1)
+		objthread_up('N', 'cmd.exe', datetime.strptime('2016-02-12 15:19:40.606228', '%Y-%m-%d %H:%M:%S.%f'))
 	with threading.Lock():
-		objthread('Space', 'cmd.exe', datetime.strptime('2016-02-12 15:19:38.996834', '%Y-%m-%d %H:%M:%S.%f'), 0)
+		objthread_down('J', 'cmd.exe', datetime.strptime('2016-02-12 15:19:40.924614', '%Y-%m-%d %H:%M:%S.%f'))#this is down
 	with threading.Lock():
-		objthread('S', 'cmd.exe', datetime.strptime('2016-02-12 15:19:39.278092', '%Y-%m-%d %H:%M:%S.%f'), 1)
+		objthread_up('J', 'cmd.exe', datetime.strptime('2016-02-12 15:19:41.018358', '%Y-%m-%d %H:%M:%S.%f'))
 	with threading.Lock():
-		objthread('S', 'cmd.exe', datetime.strptime('2016-02-12 15:19:39.371838', '%Y-%m-%d %H:%M:%S.%f'), 0)
+		objthread_down('O', 'cmd.exe', datetime.strptime('2016-02-12 15:19:41.393364', '%Y-%m-%d %H:%M:%S.%f'))#this is down
 	with threading.Lock():
-		objthread('H', 'cmd.exe', datetime.strptime('2016-02-12 15:19:39.715592', '%Y-%m-%d %H:%M:%S.%f'), 1)
+		objthread_up('O', 'cmd.exe', datetime.strptime('2016-02-12 15:19:41.502741', '%Y-%m-%d %H:%M:%S.%f'))
 	with threading.Lock():
-		objthread('H', 'cmd.exe', datetime.strptime('2016-02-12 15:19:39.824968', '%Y-%m-%d %H:%M:%S.%f'), 0)
-	with threading.Lock():
-		objthread('I', 'cmd.exe', datetime.strptime('2016-02-12 15:19:40.106221', '%Y-%m-%d %H:%M:%S.%f'), 1)
-	with threading.Lock():
-		objthread('I', 'cmd.exe', datetime.strptime('2016-02-12 15:19:40.215598', '%Y-%m-%d %H:%M:%S.%f'), 0)
-	with threading.Lock():
-		objthread('N', 'cmd.exe', datetime.strptime('2016-02-12 15:19:40.496851', '%Y-%m-%d %H:%M:%S.%f'), 1)
-	with threading.Lock():
-		objthread('N', 'cmd.exe', datetime.strptime('2016-02-12 15:19:40.606228', '%Y-%m-%d %H:%M:%S.%f'), 0)
-	with threading.Lock():
-		objthread('J', 'cmd.exe', datetime.strptime('2016-02-12 15:19:40.924614', '%Y-%m-%d %H:%M:%S.%f'), 1)
-	with threading.Lock():
-		objthread('J', 'cmd.exe', datetime.strptime('2016-02-12 15:19:41.018358', '%Y-%m-%d %H:%M:%S.%f'), 0)
-	with threading.Lock():
-		objthread('O', 'cmd.exe', datetime.strptime('2016-02-12 15:19:41.393364', '%Y-%m-%d %H:%M:%S.%f'), 1)
-	with threading.Lock():
-		objthread('O', 'cmd.exe', datetime.strptime('2016-02-12 15:19:41.502741', '%Y-%m-%d %H:%M:%S.%f'), 0)
-	with threading.Lock():
-		objthread('Escape', 'cmd.exe', datetime.strptime('2016-02-12 15:19:43.891825', '%Y-%m-%d %H:%M:%S.%f'), 1)
+		objthread_down('Escape', 'cmd.exe', datetime.strptime('2016-02-12 15:19:43.891825', '%Y-%m-%d %H:%M:%S.%f'))#this is down
 	dict_print(dicti)

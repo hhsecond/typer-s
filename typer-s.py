@@ -3,12 +3,12 @@ from core import objthread
 
 def OnKeyboardEventD(event):
     with threading.Lock():
-        objthread(event.Key, event.WindowName, datetime.datetime.now(), 1)#3rd parameter is the position of key (down is 1)
+        objthread_down(event.Key, event.WindowName, datetime.datetime.now())#3rd parameter is the position of key (down is 1)
         return True
 
 def OnKeyboardEventU(event):
     with threading.Lock():
-        objthread(event.Key, event.WindowName, datetime.datetime.now(), 0)#3rd parameter is the position of key (up is 0)
+        objthread_up(event.Key, event.WindowName, datetime.datetime.now())#3rd parameter is the position of key (up is 0)
         return True
 
 
