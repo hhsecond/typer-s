@@ -1,0 +1,2 @@
+my python dictionary is auto sorted?
+python global variable doubt, how the script prints the global variable without declaring that as global variable

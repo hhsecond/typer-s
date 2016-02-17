@@ -33,7 +33,9 @@ class key:
 #dictionary = dicti, fetching the main dictionary if no dictionary specified in the function call
 def dict_create(key_dict, dictionary = dicti):
 	#fetching each key and sending to the dict create function
-	for key_val in key_dict:
+	print(key_dict)
+	for key_val in key_dict.values():
+		#print(key_val.name)
 		dictionary = key_to_dict(key_val, dictionary) #returning dictionary recursively
 
 
@@ -79,7 +81,8 @@ class objthread_up(threading.Thread):
 		threading.Thread.__init__(self)
 		self.start()
 		etime = event_time.timestamp()
-		print(event_name)
+		global key_dict
+
 
 		curr_count = dict_counter[event_name]
 		dict_time_args[curr_count].append(etime)
@@ -90,11 +93,14 @@ class objthread_up(threading.Thread):
 		else:
 			curr_releasedn = 0.0
 		#print(curr_hold, curr_releasedn)
+		print(event_name)
 		vars()[event_name] = key(event_name, curr_hold, curr_releasedn)
 		key_dict[curr_count] = vars()[event_name]
 
 		if event_name == 'Space':
 			dict_create(key_dict)
+			key_dict = {}
+
 
 
 
@@ -119,20 +125,18 @@ def dict_print(dictionary):
 
 if __name__ == '__main__':
 	from datetime import datetime
+
+
 	
 	with threading.Lock():
 		objthread_down('S', 'cmd.exe', datetime.strptime('2016-02-12 15:19:23.097165', '%Y-%m-%d %H:%M:%S.%f'))#this is down
 	with threading.Lock():
 		objthread_down('H', 'cmd.exe', datetime.strptime('2016-02-12 15:19:23.487794', '%Y-%m-%d %H:%M:%S.%f'))#this is down
-
-
+	with threading.Lock():
+		objthread_up('H', 'cmd.exe', datetime.strptime('2016-02-12 15:19:23.581547', '%Y-%m-%d %H:%M:%S.%f'))	
 	with threading.Lock():
 		objthread_up('S', 'cmd.exe', datetime.strptime('2016-02-12 15:19:23.206544', '%Y-%m-%d %H:%M:%S.%f'))
-	with threading.Lock():
-		objthread_up('H', 'cmd.exe', datetime.strptime('2016-02-12 15:19:23.581547', '%Y-%m-%d %H:%M:%S.%f'))
 
-	with threading.Lock():
-		objthread_down('Escape', 'cmd.exe', datetime.strptime('2016-02-12 15:19:43.891825', '%Y-%m-%d %H:%M:%S.%f'))#this is down
 
 	with threading.Lock():
 		objthread_down('E', 'cmd.exe', datetime.strptime('2016-02-12 15:19:23.909676', '%Y-%m-%d %H:%M:%S.%f'))#this is down
@@ -288,4 +292,6 @@ if __name__ == '__main__':
 		objthread_up('O', 'cmd.exe', datetime.strptime('2016-02-12 15:19:41.502741', '%Y-%m-%d %H:%M:%S.%f'))
 	with threading.Lock():
 		objthread_down('Escape', 'cmd.exe', datetime.strptime('2016-02-12 15:19:43.891825', '%Y-%m-%d %H:%M:%S.%f'))#this is down
+		print('test')
+	print('testing')
 	dict_print(dicti)
