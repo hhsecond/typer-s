@@ -33,7 +33,6 @@ class key:
 #dictionary = dicti, fetching the main dictionary if no dictionary specified in the function call
 def dict_create(key_dict, dictionary = dicti):
 	#fetching each key and sending to the dict create function
-	print(key_dict)
 	for key_val in key_dict.values():
 		#print(key_val.name)
 		dictionary = key_to_dict(key_val, dictionary) #returning dictionary recursively
@@ -65,6 +64,7 @@ class objthread_down(threading.Thread):
 		threading.Thread.__init__(self)
 		self.start()
 		if event_name == 'Escape':
+			dict_print()
 			exit()
 		etime = event_time.timestamp()
 		global counter
@@ -92,8 +92,7 @@ class objthread_up(threading.Thread):
 			curr_releasedn = dict_time_args[curr_count][0] - dict_time_args[curr_count - 1][0]#curr_down_time - prev_down_time
 		else:
 			curr_releasedn = 0.0
-		#print(curr_hold, curr_releasedn)
-		print(event_name)
+		print(event_name, curr_hold, curr_releasedn)
 		vars()[event_name] = key(event_name, curr_hold, curr_releasedn)
 		key_dict[curr_count] = vars()[event_name]
 
@@ -115,7 +114,7 @@ class objthread_up(threading.Thread):
 
 
 #Sample codes starts here with test inputs and printing fucntion - can be used for debugging
-def dict_print(dictionary):
+def dict_print(dictionary = dicti):
 	for key, value in dictionary.items():
 		print(key.name, " : ", key.hold, " : ", key.releasedn)
 		if value:
