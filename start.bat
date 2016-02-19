@@ -1,1 +1,1 @@
-python typer-s.py
+python typer-s.py -l

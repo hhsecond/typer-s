@@ -17,6 +17,7 @@ dicti = {}
 dict_time_args = {0:[0.0, 0.0]}
 dict_counter = {'Space':0}
 counter = 0
+data_to_file = ''
 key_dict = {}
 
 
@@ -30,9 +31,11 @@ class key:
 
 #function for writing the dictionary to file
 def dict_write(dictionary = dicti):
+	global data_to_file
 	if dictionary.keys():
 		curr_val = list(dictionary)[0]
-		print(curr_val.name, curr_val.hold, curr_val.releasedn)
+		#print(curr_val.name, curr_val.hold, curr_val.releasedn)
+		data_to_file += curr_val.name + ':' + str(curr_val.hold) + ':' + str(curr_val.releasedn) + '\n'
 		if not dict_write(dictionary[curr_val]):
 			del dictionary[curr_val]
 			if dictionary.keys():
@@ -77,10 +80,15 @@ class objthread_down(threading.Thread):
 	def __init__(self, event_name, event_window, event_time):
 		threading.Thread.__init__(self)
 		self.start()
+		global data_to_file
 		if event_name == 'Escape':
 			while dicti.keys():
 				dict_write()
 				print('')
+			with open('typerstree.txt', 'w+') as f:
+				f.write(data_to_file)
+				f.close()
+				data_to_file = ''
 			exit()
 		etime = event_time.timestamp()
 		global counter
