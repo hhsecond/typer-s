@@ -28,6 +28,20 @@ class key:
 		self.releasedn = releasedn # duration between each key strokes: (previous key down time - current key down time)
 		self.name = name #key name in character rather string format:  for readability
 
+#function for writing the dictionary to file
+def dict_write(dictionary = dicti):
+	if dictionary.keys():
+		curr_val = list(dictionary)[0]
+		print(curr_val.name, curr_val.hold, curr_val.releasedn)
+		if not dict_write(dictionary[curr_val]):
+			del dictionary[curr_val]
+			if dictionary.keys():
+				return True
+			else:
+				return False
+		return True
+	return False
+
 
 #function creates dictionary which will accept a word at a time as a list of characters
 #dictionary = dicti, fetching the main dictionary if no dictionary specified in the function call
@@ -64,7 +78,9 @@ class objthread_down(threading.Thread):
 		threading.Thread.__init__(self)
 		self.start()
 		if event_name == 'Escape':
-			dict_print()
+			while dicti.keys():
+				dict_write()
+				print('')
 			exit()
 		etime = event_time.timestamp()
 		global counter
@@ -92,7 +108,7 @@ class objthread_up(threading.Thread):
 			curr_releasedn = dict_time_args[curr_count][0] - dict_time_args[curr_count - 1][0]#curr_down_time - prev_down_time
 		else:
 			curr_releasedn = 0.0
-		print(event_name, curr_hold, curr_releasedn)
+		#print(event_name, curr_hold, curr_releasedn)
 		vars()[event_name] = key(event_name, curr_hold, curr_releasedn)
 		key_dict[curr_count] = vars()[event_name]
 
@@ -114,12 +130,6 @@ class objthread_up(threading.Thread):
 
 
 #Sample codes starts here with test inputs and printing fucntion - can be used for debugging
-def dict_print(dictionary = dicti):
-	for key, value in dictionary.items():
-		print(key.name, " : ", key.hold, " : ", key.releasedn)
-		if value:
-			dict_print(value)
-
 
 
 if __name__ == '__main__':
