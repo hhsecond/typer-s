@@ -18,6 +18,7 @@ dict_time_args = {0:[0.0, 0.0]}
 dict_counter = {'Space':0}
 counter = 0
 data_to_file = ''
+data_to_out = ''
 key_dict = {}
 
 
@@ -32,10 +33,14 @@ class key:
 #function for writing the dictionary to file
 def dict_write(dictionary = dicti):
 	global data_to_file
+	global data_to_out
 	if dictionary.keys():
 		curr_val = list(dictionary)[0]
 		#print(curr_val.name, curr_val.hold, curr_val.releasedn)
-		data_to_file += curr_val.name + ':' + str(curr_val.hold) + ':' + str(curr_val.releasedn) + '\n'
+		data_to_file += curr_val.name + ':' + str(curr_val.hold) + ':' + str(curr_val.releasedn) + ' '
+		if not curr_val.name == 'Space':
+			data_to_out += curr_val.name
+		#print(curr_val.name)
 		if not dict_write(dictionary[curr_val]):
 			del dictionary[curr_val]
 			if dictionary.keys():
@@ -46,13 +51,27 @@ def dict_write(dictionary = dicti):
 	return False
 
 
+
+def dict_from_file():
+	with open('typerstree.txt', 'r') as f:
+		for word in f:
+			letters = word.split()
+			for letter in letters:
+				attributes = letter.split(':')
+				print(attributes[0])
+
+
+
 #function creates dictionary which will accept a word at a time as a list of characters
 #dictionary = dicti, fetching the main dictionary if no dictionary specified in the function call
 def dict_create(key_dict, dictionary = dicti):
 	#fetching each key and sending to the dict create function
-	for key_val in key_dict.values():
+	key_key = sorted(key_dict)
+	for key_key in key_key:
 		#print(key_val.name)
-		dictionary = key_to_dict(key_val, dictionary) #returning dictionary recursively
+		dictionary = key_to_dict(key_dict[key_key], dictionary) #returning dictionary recursively
+
+
 
 
 def key_to_dict(key_val, dictionary):
@@ -78,23 +97,29 @@ def key_to_dict(key_val, dictionary):
 class objthread_down(threading.Thread):
 	"""docstring for objthread - handling threads which is creating by key down event from typer-s"""
 	def __init__(self, event_name, event_window, event_time):
+		#print(event_name)
 		threading.Thread.__init__(self)
 		self.start()
 		global data_to_file
+		global data_to_out
 		if event_name == 'Escape':
 			while dicti.keys():
 				dict_write()
-				print('')
+				data_to_file += '\n'
+				data_to_out += '\n'
 			with open('typerstree.txt', 'w+') as f:
 				f.write(data_to_file)
 				f.close()
 				data_to_file = ''
+				print(data_to_out)
+				data_to_out = ''
 			exit()
 		etime = event_time.timestamp()
 		global counter
 
 		counter += 1
 		dict_counter[event_name] = counter
+		#print('do', counter, event_name)
 		dict_time_args[counter] = [etime]
 
 
@@ -102,6 +127,7 @@ class objthread_down(threading.Thread):
 class objthread_up(threading.Thread):
 	"""docstring for objthread - handling threads which is creating by key up event from typer-s"""
 	def __init__(self, event_name, event_window, event_time):
+		#print(event_name)
 		threading.Thread.__init__(self)
 		self.start()
 		etime = event_time.timestamp()
@@ -109,6 +135,7 @@ class objthread_up(threading.Thread):
 
 
 		curr_count = dict_counter[event_name]
+		#print('up', curr_count, event_name)
 		dict_time_args[curr_count].append(etime)
 
 		curr_hold = etime - dict_time_args[curr_count][0]#curr_up_time - curr_down_time
