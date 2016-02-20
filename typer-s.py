@@ -23,8 +23,9 @@ def main():
             dict_from_file()
             print('script started in execution mode...')
 
-    except:
-        print('exception reaised: start the program in listening mode (-l) or execution mode (-e)')
+    except Exception as e:
+        print(str(e))
+        #print('exception reaised: start the program in listening mode (-l) or execution mode (-e)')
     else:
         # create a hook manager
         hm = pyHook.HookManager()

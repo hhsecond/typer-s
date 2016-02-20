@@ -53,12 +53,20 @@ def dict_write(dictionary = dicti):
 
 
 def dict_from_file():
+	global key_dict
 	with open('typerstree.txt', 'r') as f:
 		for word in f:
+			print('inside for')
+			i = 0
 			letters = word.split()
 			for letter in letters:
 				attributes = letter.split(':')
 				print(attributes[0])
+				vars()[attributes[0]] = key(attributes[0], float(attributes[1]), float(attributes[2]))
+				key_dict[i] = vars()[attributes[0]]
+				i += 1
+			dict_create(key_dict)
+			key_dict = {}
 
 
 
