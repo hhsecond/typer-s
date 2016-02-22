@@ -1,7 +1,19 @@
 import pythoncom, pyHook, datetime, threading, time, sys
-from core import objthread_down, objthread_up, dict_from_file
+from core import objthread_down, objthread_up, dict_from_file, dict_to_file
 print('initializing the thread.....')
 time.sleep(.5)
+
+class writethread(threading.Thread):
+    """docstring for writethread - its for writing the file at each one minute"""
+    def __init__(self):
+        threading.Thread.__init__(self)
+        self.start()
+        while 1:
+            time.sleep(60)
+            dict_to_file()
+            
+
+
 
 def OnKeyboardEventD(event):
     with threading.Lock():
@@ -24,9 +36,12 @@ def main():
             print('script started in execution mode...')
 
     except Exception as e:
-        print(str(e))
-        #print('exception reaised: start the program in listening mode (-l) or execution mode (-e)')
+        if str(e) == 'list index out of range':
+            print('Start the program in listening mode (-l) or execution mode (-e)')
+        else:
+            print(str(e))
     else:
+        writethread()
         # create a hook manager
         hm = pyHook.HookManager()
         # watch for all mouse events

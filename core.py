@@ -31,7 +31,7 @@ class key:
 		self.name = name #key name in character rather string format:  for readability
 
 #function for writing the dictionary to file
-def dict_write(dictionary = dicti):
+def dict_to_file(dictionary = dicti):
 	global data_to_file
 	global data_to_out
 	if dictionary.keys():
@@ -41,7 +41,7 @@ def dict_write(dictionary = dicti):
 		if not curr_val.name == 'Space':
 			data_to_out += curr_val.name
 		#print(curr_val.name)
-		if not dict_write(dictionary[curr_val]):
+		if not dict_to_file(dictionary[curr_val]):
 			del dictionary[curr_val]
 			if dictionary.keys():
 				return True
@@ -56,7 +56,6 @@ def dict_from_file():
 	global key_dict
 	with open('typerstree.txt', 'r') as f:
 		for word in f:
-			print('inside for')
 			i = 0
 			letters = word.split()
 			for letter in letters:
@@ -112,7 +111,7 @@ class objthread_down(threading.Thread):
 		global data_to_out
 		if event_name == 'Escape':
 			while dicti.keys():
-				dict_write()
+				dict_to_file()
 				data_to_file += '\n'
 				data_to_out += '\n'
 			with open('typerstree.txt', 'w+') as f:
