@@ -100,32 +100,46 @@ def key_to_dict(key_val, dictionary):
 	return dictionary[key_val]
 
 
+class writedb(threading.Thread):
+    """docstring for writethread - its for writing the file at each one minute"""
+    def __init__(self):
+        threading.Thread.__init__(self)
+        self.start()
+    def run(self):
+    	global data_to_file
+    	global data_to_out
+    	global dicti
+    	while 1:
+    		time.sleep(10)
+    		while dicti.keys():
+    			print(dicti.keys())
+    			dict_to_file()
+    			data_to_file += '\n'
+    			data_to_out += '\n'
+    		with open('typerstree.txt', 'w+') as f:
+    			print('inside the typer with')
+    			f.write(data_to_file)
+    			f.close()
+    			data_to_file = ''
+    			data_to_out = ''
 
 class objthread_down(threading.Thread):
 	"""docstring for objthread - handling threads which is creating by key down event from typer-s"""
 	def __init__(self, event_name, event_window, event_time):
 		#print(event_name)
 		threading.Thread.__init__(self)
+		self.event_name = event_name
+		self.event_window = event_window
+		self.event_time = event_time
 		self.start()
+	def run(self):
 		global data_to_file
 		global data_to_out
-		if event_name == 'Escape':
-			while dicti.keys():
-				dict_to_file()
-				data_to_file += '\n'
-				data_to_out += '\n'
-			with open('typerstree.txt', 'w+') as f:
-				f.write(data_to_file)
-				f.close()
-				data_to_file = ''
-				print(data_to_out)
-				data_to_out = ''
-			exit()
-		etime = event_time.timestamp()
+		etime = self.event_time.timestamp()
 		global counter
 
 		counter += 1
-		dict_counter[event_name] = counter
+		dict_counter[self.event_name] = counter
 		#print('do', counter, event_name)
 		dict_time_args[counter] = [etime]
 
@@ -136,12 +150,14 @@ class objthread_up(threading.Thread):
 	def __init__(self, event_name, event_window, event_time):
 		#print(event_name)
 		threading.Thread.__init__(self)
+		self.event_name = event_name
+		self.event_window = event_window
+		self.event_time = event_time
 		self.start()
-		etime = event_time.timestamp()
+	def run(self):
+		etime = self.event_time.timestamp()
 		global key_dict
-
-
-		curr_count = dict_counter[event_name]
+		curr_count = dict_counter[self.event_name]
 		#print('up', curr_count, event_name)
 		dict_time_args[curr_count].append(etime)
 
@@ -151,10 +167,10 @@ class objthread_up(threading.Thread):
 		else:
 			curr_releasedn = 0.0
 		#print(event_name, curr_hold, curr_releasedn)
-		vars()[event_name] = key(event_name, curr_hold, curr_releasedn)
-		key_dict[curr_count] = vars()[event_name]
+		vars()[self.event_name] = key(self.event_name, curr_hold, curr_releasedn)
+		key_dict[curr_count] = vars()[self.event_name]
 
-		if event_name == 'Space':
+		if self.event_name == 'Space':
 			dict_create(key_dict)
 			key_dict = {}
 
