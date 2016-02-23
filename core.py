@@ -31,7 +31,7 @@ class key:
 		self.name = name #key name in character rather string format:  for readability
 
 #function for writing the dictionary to file
-def dict_to_file(dictionary = dicti):
+def dict_to_file(dictionary):
 	global data_to_file
 	global data_to_out
 	if dictionary.keys():
@@ -111,9 +111,10 @@ class writedb(threading.Thread):
     	global dicti
     	while 1:
     		time.sleep(10)
-    		while dicti.keys():
-    			print(dicti.keys())
-    			dict_to_file()
+    		temp_dicti = dicti.copy()
+    		while temp_dicti.keys():
+    			print('inside', dicti.keys())
+    			dict_to_file(temp_dicti)
     			data_to_file += '\n'
     			data_to_out += '\n'
     		with open('typerstree.txt', 'w+') as f:
