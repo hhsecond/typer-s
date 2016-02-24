@@ -20,6 +20,8 @@ counter = 0
 data_to_file = ''
 data_to_out = ''
 key_dict = {}
+index = 0
+data_out_list = []
 
 
 class key:
@@ -52,10 +54,14 @@ def dict_to_file_old(temp_dicti):
 
 
 def dict_to_file(temp_dicti):
-	global data_to_file
-	global data_to_out
+	global index
+	global data_out_list
 	for key in temp_dicti.keys():
-		
+		index += 1
+		#data_out_list.append([key])
+
+
+
 
 
 def dict_from_file():
