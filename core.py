@@ -31,7 +31,7 @@ class key:
 		self.name = name #key name in character rather string format:  for readability
 
 #function for writing the dictionary to file
-def dict_to_file(temp_dicti):
+def dict_to_file_old(temp_dicti):
 	global data_to_file
 	global data_to_out
 	if temp_dicti.keys():
@@ -50,6 +50,13 @@ def dict_to_file(temp_dicti):
 		return True
 	return False
 
+
+def dict_to_file(temp_dicti):
+	global data_to_out
+	global data_to_file
+	print('inside dict_to_file')
+	for key in temp_dicti.keys():
+		print('inside dict_to_file', key.name)
 
 
 def dict_from_file():
