@@ -31,19 +31,19 @@ class key:
 		self.name = name #key name in character rather string format:  for readability
 
 #function for writing the dictionary to file
-def dict_to_file(dictionary):
+def dict_to_file(temp_dicti):
 	global data_to_file
 	global data_to_out
-	if dictionary.keys():
-		curr_val = list(dictionary)[0]
+	if temp_dicti.keys():
+		curr_val = list(temp_dicti)[0]
 		#print(curr_val.name, curr_val.hold, curr_val.releasedn)
 		data_to_file += curr_val.name + ':' + str(curr_val.hold) + ':' + str(curr_val.releasedn) + ' '
 		if not curr_val.name == 'Space':
 			data_to_out += curr_val.name
-		#print(curr_val.name)
-		if not dict_to_file(dictionary[curr_val]):
-			del dictionary[curr_val]
-			if dictionary.keys():
+		print(curr_val.name)
+		if not dict_to_file(temp_dicti[curr_val]):
+			del temp_dicti[curr_val]
+			if temp_dicti.keys():
 				return True
 			else:
 				return False
@@ -99,6 +99,11 @@ def key_to_dict(key_val, dictionary):
 	dictionary[key_val] = {}	
 	return dictionary[key_val]
 
+def tempcheck(dictionary = dicti):
+	for key in dictionary.keys():
+		print('tempcheck', key.name)
+		return dictionary[key]
+
 
 class writedb(threading.Thread):
     """docstring for writethread - its for writing the file at each one minute"""
@@ -110,19 +115,28 @@ class writedb(threading.Thread):
     	global data_to_out
     	global dicti
     	while 1:
+    		dictionary = dicti.copy()
     		time.sleep(10)
-    		temp_dicti = dicti.copy()
+    		temp_dicti = dict(dicti)
+    		
+    		#temp call
+    		#print('inside')
+    		while dictionary:
+    			dictionary = tempcheck(dictionary)
+
+
     		while temp_dicti.keys():
-    			print('inside', dicti.keys())
+    			#print('inside the first while')
     			dict_to_file(temp_dicti)
     			data_to_file += '\n'
     			data_to_out += '\n'
     		with open('typerstree.txt', 'w+') as f:
-    			print('inside the typer with')
+    			#print('inside the typer with open')
     			f.write(data_to_file)
     			f.close()
     			data_to_file = ''
     			data_to_out = ''
+
 
 class objthread_down(threading.Thread):
 	"""docstring for objthread - handling threads which is creating by key down event from typer-s"""

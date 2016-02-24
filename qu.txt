@@ -1,2 +1,6 @@
-my python dictionary is auto sorted?
 python global variable doubt, how the script prints the global variable without declaring that as global variable
+python dictionary: deleting the dictionary values even if am deleting a copied dictionary
+	run the script
+	type sherin
+	it will print sherin first
+	second loop onwards only s will be thrown to output
