@@ -183,7 +183,13 @@ class objthread_up(threading.Thread):
 			dict_create(key_dict)
 			key_dict = {}
 
-
+#Create a variable - avg
+#this will hold an avg time  - releasedn and hold of the user.
+#instead of giving 3 second to all the user, try to find this avg value and will give this
+#create the json file to store the configurations
+#avg value finding can be incorporated in writedb class
+#this can be written in json file
+#if that delay occured, empty all the variable so the last word would not go into database
 
 
 
