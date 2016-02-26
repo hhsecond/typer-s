@@ -43,7 +43,7 @@ def dict_to_file(temp_dicti):
 
 def dict_from_file():
 	global key_dict
-	with open('typerstree.txt', 'r') as f:
+	with open('typerstree.tss', 'r') as f:
 		for word in f:
 			i = 0
 			letters = word.split()
@@ -129,7 +129,7 @@ class writedb(threading.Thread):
 	    		for letter in words:
 	    			data_to_file += letter.name + ':' + str(letter.hold) +':' + str(letter.releasedn) + ' '
 	    		data_to_file += '\n'
-	    	with open('typerstree.txt', 'w+') as f:
+	    	with open('typerstree.tss', 'w+') as f:
 	    		f.write(data_to_file)
 	    		print('data printed')
 
