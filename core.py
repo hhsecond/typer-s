@@ -18,8 +18,9 @@ dict_time_args = {0:[0.0, 0.0]}
 dict_counter = {'Space':0}
 counter = 0
 data_to_file = ''
-data_to_out = ''
 key_dict = {}
+data_out_list = []
+word = []
 
 
 class key:
@@ -30,25 +31,6 @@ class key:
 		self.releasedn = releasedn # duration between each key strokes: (previous key down time - current key down time)
 		self.name = name #key name in character rather string format:  for readability
 
-#function for writing the dictionary to file
-def dict_to_file_old(temp_dicti):
-	global data_to_file
-	global data_to_out
-	if temp_dicti.keys():
-		curr_val = list(temp_dicti)[0]
-		#print(curr_val.name, curr_val.hold, curr_val.releasedn)
-		data_to_file += curr_val.name + ':' + str(curr_val.hold) + ':' + str(curr_val.releasedn) + ' '
-		if not curr_val.name == 'Space':
-			data_to_out += curr_val.name
-		print(curr_val.name)
-		if not dict_to_file(temp_dicti[curr_val]):
-			del temp_dicti[curr_val]
-			if temp_dicti.keys():
-				return True
-			else:
-				return False
-		return True
-	return False
 
 
 def dict_to_file(temp_dicti):
@@ -112,37 +94,44 @@ def tempcheck(dictionary = dicti):
 		return dictionary[key]
 
 
+def dict_to_file(dictionary = dicti):
+	try:
+		global word
+		temp_var = 0
+		for key in dictionary.keys():
+			#print(key.name)
+			temp_var = 1
+			word.append(key)
+			#print('word length', len(word))
+			dict_to_file(dictionary[key])
+		if temp_var == 0:
+			data_out_list.append(list(word))
+			#print('****main length****', len(data_out_list))
+		word.pop()
+	except:
+		pass
+
+
 class writedb(threading.Thread):
     """docstring for writethread - its for writing the file at each one minute"""
     def __init__(self):
         threading.Thread.__init__(self)
         self.start()
     def run(self):
+    	global data_out_list
     	global data_to_file
-    	global data_to_out
-    	global dicti
     	while 1:
-    		dictionary = dicti.copy()
-    		time.sleep(10)
-    		temp_dicti = dict(dicti)
-    		
-    		#temp call
-    		#print('inside')
-    		while dictionary:
-    			dictionary = tempcheck(dictionary)
-
-
-    		while temp_dicti.keys():
-    			#print('inside the first while')
-    			dict_to_file(temp_dicti)
-    			data_to_file += '\n'
-    			data_to_out += '\n'
-    		with open('typerstree.txt', 'w+') as f:
-    			#print('inside the typer with open')
-    			f.write(data_to_file)
-    			f.close()
-    			data_to_file = ''
-    			data_to_out = ''
+	    	time.sleep(60)
+	    	data_out_list = []
+	    	data_to_file = ''
+	    	dict_to_file()
+	    	for words in data_out_list:
+	    		for letter in words:
+	    			data_to_file += letter.name + ':' + str(letter.hold) +':' + str(letter.releasedn) + ' '
+	    		data_to_file += '\n'
+	    	with open('typerstree.txt', 'w+') as f:
+	    		f.write(data_to_file)
+	    		print('data printed')
 
 
 class objthread_down(threading.Thread):
@@ -155,8 +144,6 @@ class objthread_down(threading.Thread):
 		self.event_time = event_time
 		self.start()
 	def run(self):
-		global data_to_file
-		global data_to_out
 		etime = self.event_time.timestamp()
 		global counter
 
