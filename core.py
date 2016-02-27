@@ -83,7 +83,6 @@ def key_to_dict(key_val, dictionary):
 			key.hold = (key.hold + key_val.hold)/2
 			avg_time_params[0] = (avg_time_params[0] + key_val.hold)/2
 
-
 			#handling cases with zero releasedn value 
 			if key.releasedn == 0.0:
 				key.releasedn = min(key_val.releasedn, avg_time_params[1])#handling non usual high key releasedn value
@@ -102,11 +101,13 @@ def key_to_dict(key_val, dictionary):
 				counter = 0
 				key_dict = {}
 				return dictionary[key]
-
 			else:
 				key.releasedn = (key.releasedn + key_val.releasedn)/2
 				avg_time_params[1] = (avg_time_params[1] + key_val.releasedn)/2
 				return dictionary[key]
+	
+	#handling key_val.releasedn value if it is more than usual hold time
+	key_val.releasedn = min((avg_time_params[1] * 3), key_val.releasedn)
 	dictionary[key_val] = {}	
 	return dictionary[key_val]
 
