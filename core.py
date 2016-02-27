@@ -62,7 +62,7 @@ def dict_from_file():
 #dictionary = dicti, fetching the main dictionary if no dictionary specified in the function call
 def dict_create(key_dict, dictionary = dicti):
 	#fetching each key and sending to the dict create function
-	key_key = sorted(key_dict)
+	key_key = sorted(key_dict) #returns sorted key from dictionary as a list
 	for key_key in key_key:
 		#print(key_val.name)
 		dictionary = key_to_dict(key_dict[key_key], dictionary) #returning dictionary recursively
@@ -73,17 +73,20 @@ def dict_create(key_dict, dictionary = dicti):
 def key_to_dict(key_val, dictionary):
 	#function which is currently executing does not have other dictionary functions. kind of funcitonal programming
 	for key in dictionary:
-		if key.name == key_val.name:			
+		if key.name == key_val.name:
+			
+			#handling non usual high key releasedn value
+			temp_avg = key.releasedn * 1.5
 			key.hold = (key.hold + key_val.hold)/2
 
 			#handling cases with zero releasedn value 
 			if key.releasedn == 0.0:
-				key.releasedn = key_val.releasedn
+				key.releasedn = min(key_val.releasedn, 1)#handling non usual high key releasedn value
 				return dictionary[key]
 			elif key_val.releasedn == 0.0:
 				return dictionary[key]				
 			else:
-				key.releasedn = (key.releasedn + key_val.releasedn)/2
+				key.releasedn = min((key.releasedn + key_val.releasedn)/2, temp_avg)#handling non usual high key releasedn value
 				return dictionary[key]
 	dictionary[key_val] = {}	
 	return dictionary[key_val]
