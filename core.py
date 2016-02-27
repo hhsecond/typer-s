@@ -35,13 +35,6 @@ class key:
 
 
 
-def dict_to_file(temp_dicti):
-	global data_to_out, data_to_file 
-	print('inside dict_to_file')
-	for key in temp_dicti.keys():
-		print('inside dict_to_file', key.name)
-
-
 def dict_from_file():
 	global key_dict, data_to_config 
 	with open('typerstree.tss', 'r') as f:
@@ -163,20 +156,17 @@ class writedb(threading.Thread):
 
 def bspacing():
 	global prev_key, counter, dict_counter, dict_time_args
-	try:
+	if key_dict:
 		del dict_counter[prev_key.pop()]
-		print(key_dict[counter].name)
 		del dict_time_args[counter]
 		del key_dict[counter]
 		counter -= 1
-	except Exception as e:
-		print('exception raised', e)
+
 
 
 class objthread_down(threading.Thread):
 	"""docstring for objthread - handling threads which is creating by key down event from typer-s"""
 	def __init__(self, event_name, event_window, event_time):
-		print(event_name)
 		threading.Thread.__init__(self)
 		self.event_name = event_name
 		self.event_window = event_window
@@ -224,10 +214,6 @@ class objthread_up(threading.Thread):
 			if self.event_name == 'Space':
 				dict_create(key_dict)
 				key_dict = {}
-				dict_time_args = {0:[0.0, 0.0]}
-				dict_counter = {'Space':0}
-				counter = 0
-				print('in space')
 
 
 
