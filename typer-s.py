@@ -20,7 +20,8 @@ def main():
     try:
         if sys.argv[1] == '-l':
             print('script started in listening mode')
-        if sys.argv[1] == '-e':
+            dict_from_file()
+        elif sys.argv[1] == '-e':
             print('Rading data from the tree, make sure you have enough')
             dict_from_file()
             print('script started in execution mode...')

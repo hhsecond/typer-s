@@ -21,7 +21,8 @@ data_to_file = ''
 key_dict = {}
 data_out_list = []
 word = []
-
+avg_time_params = [0.0, 0.0]
+data_to_config = {}
 
 class key:
 	"""docstring for key - this class is for creating  object with 2 attributes which we are accounting for a key"""
@@ -43,19 +44,29 @@ def dict_to_file(temp_dicti):
 
 def dict_from_file():
 	global key_dict
+	global data_to_config
 	with open('typerstree.tss', 'r') as f:
 		for word in f:
 			i = 0
 			letters = word.split()
 			for letter in letters:
 				attributes = letter.split(':')
-				print(attributes[0])
+				#print(attributes[0])
 				vars()[attributes[0]] = key(attributes[0], float(attributes[1]), float(attributes[2]))
 				key_dict[i] = vars()[attributes[0]]
 				i += 1
 			dict_create(key_dict)
 			key_dict = {}
-
+	with open('typer.config', 'r') as f:
+		data_to_config = {}
+		for line in f:
+			line = line.split(':', 1)
+			data_to_config[str(line[0])] = float(line[1])
+	try:
+		avg_time_params.append(data_to_config['average_hold_time'])
+		avg_time_params.append(data_to_config['average_release_time'])
+	except:
+		print('exception raised while reading config file')
 
 
 #function creates dictionary which will accept a word at a time as a list of characters
@@ -71,6 +82,7 @@ def dict_create(key_dict, dictionary = dicti):
 
 
 def key_to_dict(key_val, dictionary):
+	global avg_time_params
 	#function which is currently executing does not have other dictionary functions. kind of funcitonal programming
 	for key in dictionary:
 		if key.name == key_val.name:
@@ -78,15 +90,20 @@ def key_to_dict(key_val, dictionary):
 			#handling non usual high key releasedn value
 			temp_avg = key.releasedn * 1.5
 			key.hold = (key.hold + key_val.hold)/2
+			avg_time_params[0] = (avg_time_params[0] + key_val.hold)/2
+
 
 			#handling cases with zero releasedn value 
 			if key.releasedn == 0.0:
-				key.releasedn = min(key_val.releasedn, 1.0)#handling non usual high key releasedn value
+				key.releasedn = min(key_val.releasedn, avg_time_params[1])#handling non usual high key releasedn value
+				avg_time_params[1] = (avg_time_params[1] + key.releasedn)/2
 				return dictionary[key]
 			elif key_val.releasedn == 0.0:
+				avg_time_params[1] = (avg_time_params[1] + key.releasedn)/2
 				return dictionary[key]				
 			else:
 				key.releasedn = min((key.releasedn + key_val.releasedn)/2, temp_avg)#handling non usual high key releasedn value
+				avg_time_params[1] = (avg_time_params[1] + key.releasedn)/2
 				return dictionary[key]
 	dictionary[key_val] = {}	
 	return dictionary[key_val]
@@ -123,6 +140,8 @@ class writedb(threading.Thread):
     def run(self):
     	global data_out_list
     	global data_to_file
+    	global avg_time_params
+    	global data_to_config
     	while 1:
 	    	time.sleep(60)
 	    	data_out_list = []
@@ -135,6 +154,12 @@ class writedb(threading.Thread):
 	    	with open('typerstree.tss', 'w+') as f:
 	    		f.write(data_to_file)
 	    		print('data printed')
+	    	data_to_config['average_hold_time'] = avg_time_params[0]
+	    	data_to_config['average_release_time'] = avg_time_params[1]
+	    	with open('typer.config', 'w+') as f:
+	    		for key, val in data_to_config.items():
+	    			f.write(str(key) + ':' + str(val) + '\n')
+
 
 
 class objthread_down(threading.Thread):
@@ -167,6 +192,7 @@ class objthread_up(threading.Thread):
 		self.event_time = event_time
 		self.start()
 	def run(self):
+		global avg_time_params
 		etime = self.event_time.timestamp()
 		global key_dict
 		curr_count = dict_counter[self.event_name]
