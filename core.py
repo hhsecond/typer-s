@@ -81,7 +81,7 @@ def key_to_dict(key_val, dictionary):
 
 			#handling cases with zero releasedn value 
 			if key.releasedn == 0.0:
-				key.releasedn = min(key_val.releasedn, 1)#handling non usual high key releasedn value
+				key.releasedn = min(key_val.releasedn, 1.0)#handling non usual high key releasedn value
 				return dictionary[key]
 			elif key_val.releasedn == 0.0:
 				return dictionary[key]				
@@ -178,7 +178,6 @@ class objthread_up(threading.Thread):
 			curr_releasedn = dict_time_args[curr_count][0] - dict_time_args[curr_count - 1][0]#curr_down_time - prev_down_time
 		else:
 			curr_releasedn = 0.0
-		#print(event_name, curr_hold, curr_releasedn)
 		vars()[self.event_name] = key(self.event_name, curr_hold, curr_releasedn)
 		key_dict[curr_count] = vars()[self.event_name]
 
@@ -186,18 +185,6 @@ class objthread_up(threading.Thread):
 			dict_create(key_dict)
 			key_dict = {}
 
-#Create a variable - avg
-#this will hold an avg time  - releasedn and hold of the user.
-#instead of giving 3 second to all the user, try to find this avg value and will give this
-#create the json file to store the configurations
-#avg value finding can be incorporated in writedb class
-#this can be written in json file
-#if that delay occured, empty all the variable so the last word would not go into database
-
-
-
-
-		
 
 
 
