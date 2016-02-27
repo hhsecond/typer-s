@@ -1,12 +1,12 @@
 ###############################################################################################################################
 ## This file contains the class for each key object and core funcitons for defining the datastructure used in thsi program   ##
-## datastructure is a tree like structure in which the parent node will be the space key and each node will have 52 leaf     ##
-## nodes. This 52 can be defined 26 captial letters and 26 small letters of english alphabet                                 ##
-## The object creation function is accepting values from front end and creat the object which is storing in the              ##
-## datastructure.                                                                                                            ##
+## datastructure is a tree like structure in which the parent node will be the space key and each node will have 26 leaf     ##
+## nodes. This 26 can be defined 26 captial letters and 26 small letters of english alphabet                                 ##
+## The object creation function is accepting values from front end and creat the object which stores in the datastructure    ##
+## .                                                                                                                         ##
 ##                                                   Author: hhsecond                                                        ##
 ##                                          Github: github.com/hhsecond/typer-s                                              ##
-##                                                   date: 1/30/2016                                                         ##
+##                                                   date: 2/28/2016                                                         ##
 ###############################################################################################################################
 
 import threading, time
@@ -74,11 +74,10 @@ def dict_create(key_dict, dictionary = dicti):
 
 
 def key_to_dict(key_val, dictionary):
-	global avg_time_params
+	global avg_time_params, key_dict
 	#function which is currently executing does not have other dictionary functions. kind of funcitonal programming
 	for key in dictionary:
-		if key.name == key_val.name:
-			
+		if key.name == key_val.name:			
 			#handling non usual high key releasedn value
 			temp_avg = key.releasedn * 1.5
 			key.hold = (key.hold + key_val.hold)/2
@@ -93,20 +92,23 @@ def key_to_dict(key_val, dictionary):
 			elif key_val.releasedn == 0.0:
 				avg_time_params[1] = (avg_time_params[1] + key.releasedn)/2
 				return dictionary[key]				
+			elif key_val.releasedn > temp_avg:
+				key.releasedn = temp_avg#handling non usual high key releasedn value
+
+				print('starting variable emptying process')
+				#emptying variables because of the non usual delay in keystroke
+				dict_time_args = {0:[0.0, 0.0]}
+				dict_counter = {'Space':0}
+				counter = 0
+				key_dict = {}
+				return dictionary[key]
+
 			else:
-				key.releasedn = min((key.releasedn + key_val.releasedn)/2, temp_avg)#handling non usual high key releasedn value
-				avg_time_params[1] = (avg_time_params[1] + key.releasedn)/2
+				key.releasedn = (key.releasedn + key_val.releasedn)/2
+				avg_time_params[1] = (avg_time_params[1] + key_val.releasedn)/2
 				return dictionary[key]
 	dictionary[key_val] = {}	
 	return dictionary[key_val]
-
-def tempcheck(dictionary = dicti):
-	for key in dictionary.keys():
-		print('tempcheck', key.name)
-		return dictionary[key]
-
-
-
 
 
 
