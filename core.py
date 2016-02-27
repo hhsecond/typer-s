@@ -23,6 +23,7 @@ data_out_list = []
 word = []
 avg_time_params = [0.0, 0.0]
 data_to_config = {}
+prev_key = []
 
 class key:
 	"""docstring for key - this class is for creating  object with 2 attributes which we are accounting for a key"""
@@ -35,16 +36,14 @@ class key:
 
 
 def dict_to_file(temp_dicti):
-	global data_to_out
-	global data_to_file
+	global data_to_out, data_to_file 
 	print('inside dict_to_file')
 	for key in temp_dicti.keys():
 		print('inside dict_to_file', key.name)
 
 
 def dict_from_file():
-	global key_dict
-	global data_to_config
+	global key_dict, data_to_config 
 	with open('typerstree.tss', 'r') as f:
 		for word in f:
 			i = 0
@@ -114,6 +113,10 @@ def tempcheck(dictionary = dicti):
 		return dictionary[key]
 
 
+
+
+
+
 def dict_to_file(dictionary = dicti):
 	try:
 		global word
@@ -138,10 +141,7 @@ class writedb(threading.Thread):
         threading.Thread.__init__(self)
         self.start()
     def run(self):
-    	global data_out_list
-    	global data_to_file
-    	global avg_time_params
-    	global data_to_config
+    	global data_out_list, data_to_file, avg_time_params, data_to_config
     	while 1:
 	    	time.sleep(60)
 	    	data_out_list = []
@@ -161,24 +161,38 @@ class writedb(threading.Thread):
 	    			f.write(str(key) + ':' + str(val) + '\n')
 
 
+def bspacing():
+	global prev_key, counter, dict_counter, dict_time_args
+	try:
+		del dict_counter[prev_key.pop()]
+		print(key_dict[counter].name)
+		del dict_time_args[counter]
+		del key_dict[counter]
+		counter -= 1
+	except Exception as e:
+		print('exception raised', e)
+
 
 class objthread_down(threading.Thread):
 	"""docstring for objthread - handling threads which is creating by key down event from typer-s"""
 	def __init__(self, event_name, event_window, event_time):
-		#print(event_name)
+		print(event_name)
 		threading.Thread.__init__(self)
 		self.event_name = event_name
 		self.event_window = event_window
 		self.event_time = event_time
 		self.start()
 	def run(self):
-		etime = self.event_time.timestamp()
-		global counter
-
-		counter += 1
-		dict_counter[self.event_name] = counter
-		#print('do', counter, event_name)
-		dict_time_args[counter] = [etime]
+		global prev_key, dict_counter, counter, dict_time_args
+		if self.event_name != 'Back':
+			prev_key.append(self.event_name)
+			etime = self.event_time.timestamp()
+			counter += 1
+			dict_counter[self.event_name] = counter
+			#print('do', counter, event_name)
+			dict_time_args[counter] = [etime]
+		else:
+			bspacing()
 
 
 
@@ -192,24 +206,29 @@ class objthread_up(threading.Thread):
 		self.event_time = event_time
 		self.start()
 	def run(self):
-		global avg_time_params
-		etime = self.event_time.timestamp()
-		global key_dict
-		curr_count = dict_counter[self.event_name]
-		#print('up', curr_count, event_name)
-		dict_time_args[curr_count].append(etime)
+		if self.event_name != 'Back':
+			global avg_time_params, key_dict, dict_counter, dict_time_args, counter
+			etime = self.event_time.timestamp()
+			curr_count = dict_counter[self.event_name]
+			#print('up', curr_count, event_name)
+			dict_time_args[curr_count].append(etime)#for refering previous up time (not using now, for futureq)
 
-		curr_hold = etime - dict_time_args[curr_count][0]#curr_up_time - curr_down_time
-		if dict_time_args[curr_count - 1][0]:
-			curr_releasedn = dict_time_args[curr_count][0] - dict_time_args[curr_count - 1][0]#curr_down_time - prev_down_time
-		else:
-			curr_releasedn = 0.0
-		vars()[self.event_name] = key(self.event_name, curr_hold, curr_releasedn)
-		key_dict[curr_count] = vars()[self.event_name]
+			curr_hold = etime - dict_time_args[curr_count][0]#curr_up_time - curr_down_time
+			if dict_time_args[curr_count - 1][0]:
+				curr_releasedn = dict_time_args[curr_count][0] - dict_time_args[curr_count - 1][0]#curr_down_time - prev_down_time
+			else:
+				curr_releasedn = 0.0
+			vars()[self.event_name] = key(self.event_name, curr_hold, curr_releasedn)
+			key_dict[curr_count] = vars()[self.event_name]
 
-		if self.event_name == 'Space':
-			dict_create(key_dict)
-			key_dict = {}
+			if self.event_name == 'Space':
+				dict_create(key_dict)
+				key_dict = {}
+				dict_time_args = {0:[0.0, 0.0]}
+				dict_counter = {'Space':0}
+				counter = 0
+				print('in space')
+
 
 
 
@@ -392,4 +411,4 @@ if __name__ == '__main__':
 		objthread_down('Escape', 'cmd.exe', datetime.strptime('2016-02-12 15:19:43.891825', '%Y-%m-%d %H:%M:%S.%f'))#this is down
 		print('test')
 	print('testing')
-	dict_print(dicti)
+	#dict_print(dicti)
