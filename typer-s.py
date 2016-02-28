@@ -15,6 +15,16 @@ def OnKeyboardEventU(event):
         objthread_up(event.Key, event.WindowName, datetime.datetime.now())#3rd parameter is the position of key (up is 0)
         return True
 
+def OnKeyboardEventexecD(event):
+    with threading.Lock():
+        objthread_exec_down(event.Key, event.WindowName, datetime.datetime.now())#3rd parameter is the position of key (down is 1)
+        return True
+
+def OnKeyboardEventexecU(event):
+    with threading.Lock():
+        objthread_exec_up(event.Key, event.WindowName, datetime.datetime.now())#3rd parameter is the position of key (up is 0)
+        return True
+
 
 def main():
     try:
@@ -32,17 +42,32 @@ def main():
         else:
             print(str(e))
     else:
-        #writing db at each interval
-        writedb()
-        # create a hook manager
-        hm = pyHook.HookManager()
-        # watch for all mouse events
-        hm.KeyDown = OnKeyboardEventD
-        hm.KeyUp = OnKeyboardEventU
-        # set the hook
-        hm.HookKeyboard()
-        # wait forever
-        pythoncom.PumpMessages()
+        if sys.argv[1] == '-l':
+            print('in listening mode')
+            #writing db at each interval
+            writedb()
+            # create a hook manager
+            hm = pyHook.HookManager()
+            # watch for all mouse events
+            hm.KeyDown = OnKeyboardEventD
+            hm.KeyUp = OnKeyboardEventU
+            # set the hook
+            hm.HookKeyboard()
+            # wait forever
+            pythoncom.PumpMessages()
+        elif sys.argv[1] == '-e':
+            print('in execution mode')
+            #writing db at each interval - currently not configuring for execution mode
+            #writedb()
+            # create a hook manager
+            hm = pyHook.HookManager()
+            # watch for all mouse events
+            hm.KeyDown = OnKeyboardEventexecD
+            hm.KeyUp = OnKeyboardEventexecU
+            # set the hook
+            hm.HookKeyboard()
+            # wait forever
+            pythoncom.PumpMessages()
 
 
 
