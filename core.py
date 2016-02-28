@@ -24,6 +24,7 @@ word = []
 avg_time_params = [0.0, 0.0]
 data_to_config = {}
 prev_key = []
+prev_avg = []
 
 class key:
 	"""docstring for key - this class is for creating  object with 2 attributes which we are accounting for a key"""
@@ -36,8 +37,8 @@ class key:
 
 
 def dict_from_file():
-	global key_dict, data_to_config 
-	with open('typerstree.tss', 'r') as f:
+	global key_dict, data_to_config
+	with open('typerstree.tss', 'r+') as f:
 		for word in f:
 			i = 0
 			letters = word.split()
@@ -49,7 +50,7 @@ def dict_from_file():
 				i += 1
 			dict_create(key_dict)
 			key_dict = {}
-	with open('typer.config', 'r') as f:
+	with open('typer.config', 'r+') as f:
 		data_to_config = {}
 		for line in f:
 			line = line.split(':', 1)
@@ -74,25 +75,26 @@ def dict_create(key_dict, dictionary = dicti):
 
 
 def key_to_dict(key_val, dictionary):
-	global avg_time_params, key_dict
-	#function which is currently executing does not have other dictionary functions. kind of funcitonal programming
+	global avg_time_params, key_dict, prev_avg
 	for key in dictionary:
-		if key.name == key_val.name:			
+		if key.name == key_val.name:
 			#handling non usual high key releasedn value
 			temp_avg = key.releasedn * 1.5
 			key.hold = (key.hold + key_val.hold)/2
-			avg_time_params[0] = (avg_time_params[0] + key_val.hold)/2
+			
 
 			#handling cases with zero releasedn value 
 			if key.releasedn == 0.0:
-				key.releasedn = min(key_val.releasedn, avg_time_params[1])#handling non usual high key releasedn value
-				avg_time_params[1] = (avg_time_params[1] + key.releasedn)/2
-				return dictionary[key]
+				if key_val.releasedn <= avg_time_params[1]:
+					key.releasedn = key_val.releasedn#handling non usual high key releasedn value
+					avg_time_params[1] = (avg_time_params[1] + key.releasedn)/2
+					return dictionary[key]
+				else:
+					return dictionary[key]
 			elif key_val.releasedn == 0.0:
 				avg_time_params[1] = (avg_time_params[1] + key.releasedn)/2
 				return dictionary[key]				
-			elif key_val.releasedn > temp_avg:
-				key.releasedn = temp_avg#handling non usual high key releasedn value
+			elif key_val.releasedn > temp_avg:#handling non usual high key releasedn value
 
 				print('starting variable emptying process')
 				#emptying variables because of the non usual delay in keystroke
@@ -100,6 +102,8 @@ def key_to_dict(key_val, dictionary):
 				dict_counter = {'Space':0}
 				counter = 0
 				key_dict = {}
+
+				#not changing any values because we think that the value can be wrong
 				return dictionary[key]
 			else:
 				key.releasedn = (key.releasedn + key_val.releasedn)/2
@@ -107,10 +111,8 @@ def key_to_dict(key_val, dictionary):
 				return dictionary[key]
 	
 	#handling key_val.releasedn value if it is more than usual hold time
-	key_val.releasedn = min((avg_time_params[1] * 3), key_val.releasedn)
-	dictionary[key_val] = {}	
+	dictionary[key_val] = {}
 	return dictionary[key_val]
-
 
 
 def dict_to_file(dictionary = dicti):
