@@ -1,6 +1,5 @@
 import pythoncom, pyHook, datetime, threading, time, sys
-from core import objthread_down, objthread_up, dict_from_file, dict_to_file, writedb
-import core_exec as ce
+from core import objthread_down, objthread_up, dict_from_file, writedb, checkdb, objthread_exec_up, objthread_exec_down
 print('initializing the thread.....')
 time.sleep(.5)       
 
@@ -60,6 +59,7 @@ def main():
             print('in execution mode')
             #writing db at each interval - currently not configuring for execution mode
             #writedb()
+            checkdb()
             # create a hook manager
             hm = pyHook.HookManager()
             # watch for all mouse events
