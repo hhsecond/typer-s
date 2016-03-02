@@ -10,22 +10,7 @@
 ###############################################################################################################################
 
 import threading, time
-
-
-dicti = {}
-#trial_dict = {'a':{'b':{'c':{'d':{}}, 'e':{}}}} - Trial dictionary: datastructure will look like this if the words added are "abcd" and "abe"
-dict_time_args = {0:[0.0, 0.0]}
-dict_counter = {'Space':0}
-counter = 0
-data_to_file = ''
-key_dict = {}
-data_out_list = []
-word = []
-avg_time_params = [0.0, 0.0]
-data_to_config = {}
-prev_key = []
-prev_avg = []
-score = []
+from settings import *
 
 class key:
 	"""docstring for key - this class is for creating  object with 2 attributes which we are accounting for a key"""
@@ -35,8 +20,17 @@ class key:
 		self.releasedn = releasedn # duration between each key strokes: (previous key down time - current key down time)
 		self.name = name #key name in character rather string format:  for readability
 
+
+class check_key:
+	"""docstring for check_key - using for comapring old user with user in the database"""
+	def __init__(self):
+		self.score = 0
+		
+
 def comparer(a, b):
-	return (1-(min(a, b)/max(a, b)))
+	ret = (1-(min(a, b)/max(a, b)))
+	return (ret ** 2)
+
 
 def dict_from_file():
 	global key_dict, data_to_config
@@ -97,9 +91,8 @@ def key_to_dict(key_val, dictionary):
 	for key in dictionary:
 		if key.name == key_val.name:
 			#handling non usual high key releasedn value
-			temp_avg = key.releasedn * 1.5
+			temp_avg = key.releasedn * 2
 			key.hold = (key.hold + key_val.hold)/2
-			
 
 			#handling cases with zero releasedn value 
 			if key.releasedn == 0.0:
