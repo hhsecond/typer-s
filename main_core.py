@@ -25,9 +25,8 @@ class key:
 
 
 def dict_from_file():
-	print(__file__)
 	global key_dict, data_to_config
-	with open('typerstree.tss', 'r+') as f:
+	with open('typer-s\\typerstree.tss', 'r+') as f:
 		for word in f:
 			i = 0
 			letters = word.split()
@@ -39,7 +38,7 @@ def dict_from_file():
 				i += 1
 			dict_create(key_dict)
 			key_dict = {}
-	with open('typer.config', 'r+') as f:
+	with open('typer-s\\typer.config', 'r+') as f:
 		data_to_config = {}
 		for line in f:
 			line = line.split(':', 1)

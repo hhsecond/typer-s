@@ -11,6 +11,7 @@
 
 import threading, time
 from settings import *
+from main_core import *
 
 
 class check_key:

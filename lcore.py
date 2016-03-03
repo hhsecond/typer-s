@@ -9,7 +9,7 @@
 ##                                                   date: 2/28/2016                                                         ##
 ###############################################################################################################################
 
-import threading, time, main_core
+import threading, time
 from settings import *
 from main_core import *
 
@@ -49,12 +49,12 @@ class writedb(threading.Thread):
 	    		for letter in words:
 	    			data_to_file += letter.name + ':' + str(letter.hold) +':' + str(letter.releasedn) + ' '
 	    		data_to_file += '\n'
-	    	with open('typerstree.tss', 'w+') as f:
+	    	with open('typer-s\\typerstree.tss', 'w+') as f:
 	    		f.write(data_to_file)
 	    		print('data printed')
 	    	data_to_config['average_hold_time'] = avg_time_params[0]
 	    	data_to_config['average_release_time'] = avg_time_params[1]
-	    	with open('typer.config', 'w+') as f:
+	    	with open('typer-s\\typer.config', 'w+') as f:
 	    		for key, val in data_to_config.items():
 	    			f.write(str(key) + ':' + str(val) + '\n')
 
