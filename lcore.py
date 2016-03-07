@@ -15,23 +15,6 @@ from main_core import *
 
 
 
-def dict_to_file(dictionary = dicti):
-	try:
-		global word
-		temp_var = 0
-		for key in dictionary.keys():
-			#print(key.name)
-			temp_var = 1
-			word.append(key)
-			#print('word length', len(word))
-			dict_to_file(dictionary[key])
-		if temp_var == 0:
-			data_out_list.append(list(word))
-			#print('****main length****', len(data_out_list))
-		word.pop()
-	except:
-		pass
-
 
 class writedb(threading.Thread):
     """docstring for writethread - its for writing the file at each one minute"""
@@ -39,13 +22,12 @@ class writedb(threading.Thread):
         threading.Thread.__init__(self)
         self.start()
     def run(self):
-    	global data_out_list, data_to_file, avg_time_params, data_to_config
+    	global avg_time_params, data_to_config, dicti
     	while 1:
 	    	time.sleep(60)
-	    	data_out_list = []
 	    	data_to_file = ''
-	    	dict_to_file()
-	    	for words in data_out_list:
+	    	data_out_li = dicti.filewrite()
+	    	for words in data_out_li:
 	    		for letter in words:
 	    			data_to_file += letter.name + ':' + str(letter.hold) +':' + str(letter.releasedn) + ' '
 	    		data_to_file += '\n'
@@ -93,7 +75,7 @@ class objthread_up(threading.Thread):
 		self.start()
 	def run(self):
 		if self.event_name != 'Back':
-			global avg_time_params, key_dict, dict_counter, dict_time_args, counter
+			global avg_time_params, key_dict, dict_counter, dict_time_args, counter, dicti
 			etime = self.event_time.timestamp()
 			curr_count = dict_counter[self.event_name]
 			#print('up', curr_count, event_name)
@@ -108,7 +90,7 @@ class objthread_up(threading.Thread):
 			key_dict[curr_count] = vars()[self.event_name]
 
 			if self.event_name == 'Space':
-				dict_create(key_dict)
+				dicti.enter(key_dict)
 				key_dict = {}
 
 

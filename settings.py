@@ -1,12 +1,8 @@
-dicti = {}
 #trial_dict = {'a':{'b':{'c':{'d':{}}, 'e':{}}}} - Trial dictionary: datastructure will look like this if the words added are "abcd" and "abe"
 dict_time_args = {0:[0.0, 0.0]}
 dict_counter = {'Space':0}
 counter = 0
-data_to_file = ''
 key_dict = {}
-data_out_list = []
-word = []
 avg_time_params = [0.0, 0.0]
 data_to_config = {}
 prev_key = []

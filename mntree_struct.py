@@ -1,17 +1,55 @@
+word = []
+data_out_list = []
+from settings import avg_time_params
+
+
+
 class mntree(dict):
 	"""docstring for mntree - defining the datastructure as a class"""
 	def __init__(self):
 		pass
-	def enter(self, key_dict):
+	def enter(self, key_dictionary):
 		#fetching each key and sending to the dict create function
-		key_key = sorted(key_dict) #returns sorted key from dictionary as a list
+		key_key = sorted(key_dictionary) #returns sorted key from dictionary as a list
 		dictionary = self
 		for key_key in key_key:
 			#print(key_val.name)
-			dictionary = key_to_dict(key_dict[key_key], dictionary) #returning dictionary recursively
+			dictionary = key_to_dict(key_dictionary[key_key], dictionary) #returning dictionary recursively
+
+	def testprint(self):
+		printintheorder(self)
+
+	def filewrite(self):
+		global data_out_list
+		data_out_list = []
+		dict_to_file(self)
+		return data_out_list
 
 
-	def key_to_dict(key_val, dictionary):
+def dict_to_file(dictionary):
+	try:
+		global word, data_out_list
+		temp_var = 0
+		for key in dictionary:
+			#print(key.name)
+			temp_var = 1
+			word.append(key)
+			#print('word length', len(word))
+			dict_to_file(dictionary[key])
+		if temp_var == 0:
+			data_out_list.append(list(word))
+			#print('****main length****', len(data_out_list))
+		word.pop()
+	except:
+		pass
+
+
+def printintheorder(dictionary):
+	for key in dictionary:
+		print(key.name)
+		printintheorder(dictionary[key])
+
+def key_to_dict(key_val, dictionary):
 	global avg_time_params, key_dict, prev_avg
 	for key in dictionary:
 		if key.name == key_val.name:
@@ -49,4 +87,3 @@ class mntree(dict):
 	#handling key_val.releasedn value if it is more than usual hold time
 	dictionary[key_val] = {}
 	return dictionary[key_val]
-
