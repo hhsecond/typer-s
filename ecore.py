@@ -29,18 +29,18 @@ def comparer(a, b):
 def dict_check(key_dict, dictionary = dicti):
 	key_key = sorted(key_dict) #returns sorted key from dictionary as a list
 	for key_key in key_key:
-		#print(key_val.name)
+		print('********************', key_dict[key_key])
 		dictionary = key_in_dict(key_dict[key_key], dictionary) #returning dictionary recursively
 
 
 def key_in_dict(key_val, dictionary):
 	global key_dict, score
 	for key in dictionary:
-		if key.name == key_val.name:
-			if key_val.hold != 0 and key.hold != 0:
-				score.append(comparer(key_val.hold, key.hold))
-			if key_val.releasedn != 0 and key.releasedn != 0:
-				score.append(comparer(key_val.releasedn, key.releasedn))
+		if key.name == key_val['name']:
+			if key_val['hold'] != 0 and key.hold != 0:
+				score.append(comparer(key_val['hold'], key.hold))
+			if key_val['releasedn'] != 0 and key.releasedn != 0:
+				score.append(comparer(key_val['releasedn'], key.releasedn))
 			return dictionary[key]
 	return {} 
 
@@ -89,7 +89,7 @@ class objthread_down(threading.Thread):
 			bspacing()
 
 
-
+attr_dict = {}
 class objthread_up(threading.Thread):
 	"""docstring for objthread - handling threads which is creating by key up event from typer-s"""
 	def __init__(self, event_name, event_window, event_time):
@@ -101,7 +101,7 @@ class objthread_up(threading.Thread):
 		self.start()
 	def run(self):
 		if self.event_name != 'Back':
-			global avg_time_params, key_dict, dict_counter, dict_time_args, counter
+			global avg_time_params, key_dict, dict_counter, dict_time_args, counter, attr_dict
 			etime = self.event_time.timestamp()
 			curr_count = dict_counter[self.event_name]
 			#print('up', curr_count, event_name)
@@ -112,8 +112,12 @@ class objthread_up(threading.Thread):
 				curr_releasedn = dict_time_args[curr_count][0] - dict_time_args[curr_count - 1][0]#curr_down_time - prev_down_time
 			else:
 				curr_releasedn = 0.0
-			vars()[self.event_name] = key(self.event_name, curr_hold, curr_releasedn)
-			key_dict[curr_count] = vars()[self.event_name]
+			#vars()[self.event_name] = key(self.event_name, curr_hold, curr_releasedn)
+			#instead of creating var like in lcore, we are passing list
+			attr_dict['name'] = self.event_name
+			attr_dict['hold'] = curr_hold
+			attr_dict['releasedn'] = curr_releasedn
+			key_dict[curr_count] = attr_dict
 
 			if self.event_name == 'Space':
 				dict_check(key_dict)

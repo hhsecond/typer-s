@@ -50,6 +50,7 @@ def dict_from_file():
 		print('exception raised while reading config file')
 
 
+
 #function creates dictionary which will accept a word at a time as a list of characters
 #dictionary = dicti, fetching the main dictionary if no dictionary specified in the function call
 def dict_create(key_dict, dictionary = dicti):
