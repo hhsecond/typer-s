@@ -75,7 +75,7 @@ class objthread_up(threading.Thread):
 		self.start()
 	def run(self):
 		if self.event_name != 'Back':
-			global avg_time_params, key_dict, dict_counter, dict_time_args, counter, dicti
+			global avg_time_params, key_dict, dict_counter, dict_time_args, counter, dicti 
 			etime = self.event_time.timestamp()
 			curr_count = dict_counter[self.event_name]
 			#print('up', curr_count, event_name)
@@ -88,6 +88,7 @@ class objthread_up(threading.Thread):
 				curr_releasedn = 0.0
 			vars()[self.event_name] = key(self.event_name, curr_hold, curr_releasedn)
 			key_dict[curr_count] = vars()[self.event_name]
+			del vars()[self.event_name]
 
 			if self.event_name == 'Space':
 				dicti.enter(key_dict)

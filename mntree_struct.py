@@ -24,6 +24,12 @@ class mntree(dict):
 		data_out_list = []
 		dict_to_file(self)
 		return data_out_list
+	def checker(self, keydict, mntreeobj):
+		dictionary = mntreeobj
+		key_key = sorted(keydict) #returns sorted key from dictionary as a list
+			for key_key in key_key:
+				dictionary = key_in_dict(keydict[key_key], dictionary) #returning dictionary recursively
+
 
 
 def dict_to_file(dictionary):
