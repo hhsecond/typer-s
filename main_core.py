@@ -43,6 +43,7 @@ def dict_from_file():
 		for line in f:
 			line = line.split(':', 1)
 			data_to_config[str(line[0])] = float(line[1])
+	dicti.testprint()
 	try:
 		avg_time_params.append(data_to_config['average_hold_time'])
 		avg_time_params.append(data_to_config['average_release_time'])

@@ -1,7 +1,7 @@
 word = []
 data_out_list = []
 score_dicti = {}
-counter = 0
+count_check = 0
 from settings import avg_time_params
 
 
@@ -14,6 +14,7 @@ class mntree(dict):
 	#usng same enter function for key insert and score insert by introducing new argument 'status'. It will be 'basic' always for key entry. 
 	#But different for score entry
 	def enter(self, key_dictionary, status = 'basic'):
+		print('entering enter with status', status)
 		#fetching each key and sending to the dict create function
 		key_key = sorted(key_dictionary) #returns sorted key from dictionary as a list
 		dictionary = self
@@ -36,13 +37,13 @@ class mntree(dict):
 		return data_out_list
 
 	def checker(self, keydict, sdicti):
-		global score_dicti, counter
+		global score_dicti, count_check
 		score_dicti = {}
-		counter = 0
+		count_check = 0
 		dictionary = self
 		key_key = sorted(keydict) #returns sorted key from dictionary as a list
-			for key_key in key_key:
-				dictionary = key_in_dict(keydict[key_key], dictionary, sdicti) #returning dictionary recursively
+		for key_key in key_key:
+			dictionary = key_in_dict(keydict[key_key], dictionary, sdicti) #returning dictionary recursively
 		return sdicti.enter(score_dicti, 'advanced')
 
 class check_key:
@@ -54,7 +55,7 @@ class check_key:
 
 
 def comparer(a, b):
-	if (b*1.3) => a => (b*0.7):
+	if (b*1.3) >= a >= (b*0.7):
 		print('returning zero in comparer')
 		return 0
 	else:
@@ -63,7 +64,7 @@ def comparer(a, b):
 
 
 def key_in_dict(key_val, dictionary, sdicti):
-	global counter, score_dicti
+	global count_check, score_dicti
 	for key in dictionary:
 		if key.name == key_val.name:
 			vars()[key.name] = check_key(key.name)
@@ -71,8 +72,9 @@ def key_in_dict(key_val, dictionary, sdicti):
 				vars()[key.name].hold_score = (comparer(key_val.hold, key.hold))
 			if key_val.releasedn != 0 and key.releasedn != 0:
 				vars()[key.name].releasedn_score = (comparer(key_val.releasedn, key.releasedn))
-			print('counter: ', counter + 1)
-			score_dicti[counter+=1] = vars()[key.name]
+			count_check += 1
+			print('count_check: ', count_check)
+			score_dicti[count_check] = vars()[key.name]
 			return dictionary[key]
 	return {} 
 
