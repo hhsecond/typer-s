@@ -1,5 +1,7 @@
 word = []
 data_out_list = []
+score_dicti = {}
+counter = 0
 from settings import avg_time_params
 
 
@@ -8,13 +10,21 @@ class mntree(dict):
 	"""docstring for mntree - defining the datastructure as a class"""
 	def __init__(self):
 		pass
-	def enter(self, key_dictionary):
+	
+	#usng same enter function for key insert and score insert by introducing new argument 'status'. It will be 'basic' always for key entry. 
+	#But different for score entry
+	def enter(self, key_dictionary, status = 'basic'):
 		#fetching each key and sending to the dict create function
 		key_key = sorted(key_dictionary) #returns sorted key from dictionary as a list
 		dictionary = self
-		for key_key in key_key:
-			#print(key_val.name)
-			dictionary = key_to_dict(key_dictionary[key_key], dictionary) #returning dictionary recursively
+		if status == 'basic':
+			for key_key in key_key:
+				#print(key_val.name)
+				dictionary = key_to_dict(key_dictionary[key_key], dictionary) #returning dictionary recursively
+		else:
+			for key_key in key_key:
+				#print(key_val.name)
+				dictionary = key_to_sdict(key_dictionary[key_key], dictionary) #returning dictionary recursively			
 
 	def testprint(self):
 		printintheorder(self)
@@ -24,11 +34,47 @@ class mntree(dict):
 		data_out_list = []
 		dict_to_file(self)
 		return data_out_list
-	def checker(self, keydict, mntreeobj):
-		dictionary = mntreeobj
+
+	def checker(self, keydict, sdicti):
+		global score_dicti, counter
+		score_dicti = {}
+		counter = 0
+		dictionary = self
 		key_key = sorted(keydict) #returns sorted key from dictionary as a list
 			for key_key in key_key:
-				dictionary = key_in_dict(keydict[key_key], dictionary) #returning dictionary recursively
+				dictionary = key_in_dict(keydict[key_key], dictionary, sdicti) #returning dictionary recursively
+		return sdicti.enter(score_dicti, 'advanced')
+
+class check_key:
+	"""docstring for check_key - using for comapring old user with user in the database"""
+	def __init__(self, name):
+		self.hold_score = 0
+		self.releasedn_score = 0
+		self.name = name
+
+
+def comparer(a, b):
+	if (b*1.3) => a => (b*0.7):
+		print('returning zero in comparer')
+		return 0
+	else:
+		print('else in comparer')
+		return 1 
+
+
+def key_in_dict(key_val, dictionary, sdicti):
+	global counter, score_dicti
+	for key in dictionary:
+		if key.name == key_val.name:
+			vars()[key.name] = check_key(key.name)
+			if key_val.hold != 0 and key.hold != 0:
+				vars()[key.name].hold_score = (comparer(key_val.hold, key.hold))
+			if key_val.releasedn != 0 and key.releasedn != 0:
+				vars()[key.name].releasedn_score = (comparer(key_val.releasedn, key.releasedn))
+			print('counter: ', counter + 1)
+			score_dicti[counter+=1] = vars()[key.name]
+			return dictionary[key]
+	return {} 
 
 
 
@@ -46,8 +92,8 @@ def dict_to_file(dictionary):
 			data_out_list.append(list(word))
 			#print('****main length****', len(data_out_list))
 		word.pop()
-	except:
-		pass
+	except Exception as e:
+		print('exception in dict_to_file: ', e)
 
 
 def printintheorder(dictionary):
@@ -91,5 +137,15 @@ def key_to_dict(key_val, dictionary):
 				return dictionary[key]
 	
 	#handling key_val.releasedn value if it is more than usual hold time
+	dictionary[key_val] = {}
+	return dictionary[key_val]
+
+
+def key_to_sdict(key_val, dictionary):
+	for key in dictionary:
+		if key.name == key_val.name:
+			key.hold_score += key_val.hold_score
+			key.releasedn_score += key_val.releasedn_score
+			return dictionary[key]	
 	dictionary[key_val] = {}
 	return dictionary[key_val]
