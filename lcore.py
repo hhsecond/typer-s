@@ -60,6 +60,7 @@ class objthread_down(threading.Thread):
 			#print('do', counter, event_name)
 			dict_time_args[counter] = [etime]
 		else:
+			print(key_dict)
 			bspacing()
 
 
@@ -92,7 +93,7 @@ class objthread_up(threading.Thread):
 
 			if self.event_name == 'Space':
 				dicti.enter(key_dict)
-				key_dict = {}
+				key_dict.clear()
 
 
 

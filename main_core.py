@@ -37,7 +37,7 @@ def dict_from_file():
 				key_dict[i] = vars()[attributes[0]]
 				i += 1
 			dicti.enter(key_dict)
-			key_dict = {}
+			key_dict.clear()
 	with open('typer-s\\typer.config', 'r+') as f:
 		data_to_config = {}
 		for line in f:
@@ -56,6 +56,7 @@ def dict_from_file():
 
 def bspacing():
 	global prev_key, counter, dict_counter, dict_time_args, key_dict
+	print(key_dict)
 	if key_dict:
 		del dict_counter[prev_key.pop()]
 		del dict_time_args[counter]

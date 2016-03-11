@@ -89,7 +89,7 @@ class objthread_up(threading.Thread):
 
 			if self.event_name == 'Space':
 				sdicti = dicti.checker(key_dict, sdicti)
-				key_dict = {}
+				key_dict.clear()
 
 
 
