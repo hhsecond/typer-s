@@ -59,9 +59,9 @@ def bspacing():
 	print(key_dict)
 	if key_dict:
 		del dict_counter[prev_key.pop()]
-		del dict_time_args[counter]
-		del key_dict[counter]
-		counter -= 1
+		del dict_time_args[counter[0]]
+		del key_dict[counter[0]]
+		counter[0] -= 1
 	
 
 

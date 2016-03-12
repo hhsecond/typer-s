@@ -132,7 +132,7 @@ def key_to_dict(key_val, dictionary):
 				dict_counter.clear()
 				dict_counter['Space'] = 0
 				
-				counter = 0
+				counter[0] = 0
 				key_dict.clear()
 
 				#not changing any values because we think that the value can be wrong

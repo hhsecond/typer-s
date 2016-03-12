@@ -51,10 +51,10 @@ class objthread_down(threading.Thread):
 		if self.event_name != 'Back':
 			prev_key.append(self.event_name)
 			etime = self.event_time.timestamp()
-			counter += 1
-			dict_counter[self.event_name] = counter
+			counter[0] += 1
+			dict_counter[self.event_name] = counter[0]
 			#print('do', counter, event_name)
-			dict_time_args[counter] = [etime]
+			dict_time_args[counter[0]] = [etime]
 		else:
 			bspacing()
 
