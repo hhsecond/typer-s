@@ -126,8 +126,12 @@ def key_to_dict(key_val, dictionary):
 
 				print('starting variable emptying process')
 				#emptying variables because of the non usual delay in keystroke
-				dict_time_args = {0:[0.0, 0.0]}
-				dict_counter = {'Space':0}
+				dict_time_args.clear()
+				dict_time_args[0] = [0.0, 0.0]
+
+				dict_counter.clear()
+				dict_counter['Space'] = 0
+				
 				counter = 0
 				key_dict.clear()
 

@@ -39,7 +39,7 @@ def dict_from_file():
 			dicti.enter(key_dict)
 			key_dict.clear()
 	with open('typer-s\\typer.config', 'r+') as f:
-		data_to_config = {}
+		data_to_config.clear()
 		for line in f:
 			line = line.split(':', 1)
 			data_to_config[str(line[0])] = float(line[1])
