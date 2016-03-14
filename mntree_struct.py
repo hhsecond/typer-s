@@ -35,14 +35,18 @@ class mntree(dict):
 		return data_out_list
 
 	def checker(self, keydict, sdicti):
+		'''accepting the main key with key hold and key release time, passing dictionary 
+		of this object to key in dict for verification in the dictionary
+		self here is dicti - the main dictionary, sdicti is passing as an argument for storing the score'''
 		global score_dict, count_check
 		score_dict = {}
 		count_check = 0
 		dictionary = self
 		key_key = sorted(keydict) #returns sorted key from dictionary as a list
 		for key_key in key_key:
-			dictionary = key_in_dict(keydict[key_key], dictionary, sdicti) #returning dictionary recursively
-		return sdicti.enter(score_dict, 'advanced')
+			dictionary = key_in_dict(keydict[key_key], dictionary) #returning dictionary recursively
+		sdicti.enter(score_dict, 'advanced')
+		return sdicti
 
 class check_key:
 	"""docstring for check_key - using for comapring old user with user in the database"""
@@ -53,15 +57,13 @@ class check_key:
 
 
 def comparer(a, b):
-	if (b*1.3) >= a >= (b*0.7):
-		print('returning zero in comparer')
+	if (b*1.5) >= a >= (b*0.5):
 		return 0
 	else:
-		print('else in comparer')
 		return 1 
 
 
-def key_in_dict(key_val, dictionary, sdicti):
+def key_in_dict(key_val, dictionary):
 	global count_check, score_dict, check_key
 	for key in dictionary:
 		if key.name == key_val.name:
@@ -71,7 +73,6 @@ def key_in_dict(key_val, dictionary, sdicti):
 			if key_val.releasedn != 0 and key.releasedn != 0:
 				vars()[key.name].releasedn_score = (comparer(key_val.releasedn, key.releasedn))
 			count_check += 1
-			print('count_check: ', count_check)
 			score_dict[count_check] = vars()[key.name]
 			return dictionary[key]
 	return {} 
