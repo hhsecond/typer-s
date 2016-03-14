@@ -1,8 +1,8 @@
 word = []
 data_out_list = []
-score_dicti = {}
+score_dict = {}
 count_check = 0
-from settings import avg_time_params
+from settings import *
 
 
 
@@ -14,13 +14,11 @@ class mntree(dict):
 	#usng same enter function for key insert and score insert by introducing new argument 'status'. It will be 'basic' always for key entry. 
 	#But different for score entry
 	def enter(self, key_dictionary, status = 'basic'):
-		print('entering enter with status', status)
 		#fetching each key and sending to the dict create function
 		key_key = sorted(key_dictionary) #returns sorted key from dictionary as a list
 		dictionary = self
 		if status == 'basic':
 			for key_key in key_key:
-				#print(key_val.name)
 				dictionary = key_to_dict(key_dictionary[key_key], dictionary) #returning dictionary recursively
 		else:
 			for key_key in key_key:
@@ -37,14 +35,14 @@ class mntree(dict):
 		return data_out_list
 
 	def checker(self, keydict, sdicti):
-		global score_dicti, count_check
-		score_dicti = {}
+		global score_dict, count_check
+		score_dict = {}
 		count_check = 0
 		dictionary = self
 		key_key = sorted(keydict) #returns sorted key from dictionary as a list
 		for key_key in key_key:
 			dictionary = key_in_dict(keydict[key_key], dictionary, sdicti) #returning dictionary recursively
-		return sdicti.enter(score_dicti, 'advanced')
+		return sdicti.enter(score_dict, 'advanced')
 
 class check_key:
 	"""docstring for check_key - using for comapring old user with user in the database"""
@@ -64,7 +62,7 @@ def comparer(a, b):
 
 
 def key_in_dict(key_val, dictionary, sdicti):
-	global count_check, score_dicti
+	global count_check, score_dict, check_key
 	for key in dictionary:
 		if key.name == key_val.name:
 			vars()[key.name] = check_key(key.name)
@@ -74,7 +72,7 @@ def key_in_dict(key_val, dictionary, sdicti):
 				vars()[key.name].releasedn_score = (comparer(key_val.releasedn, key.releasedn))
 			count_check += 1
 			print('count_check: ', count_check)
-			score_dicti[count_check] = vars()[key.name]
+			score_dict[count_check] = vars()[key.name]
 			return dictionary[key]
 	return {} 
 
@@ -104,7 +102,7 @@ def printintheorder(dictionary):
 		printintheorder(dictionary[key])
 
 def key_to_dict(key_val, dictionary):
-	global avg_time_params, key_dict, prev_avg
+	global avg_time_params, prev_avg, dict_time_args, dict_counter
 	for key in dictionary:
 		if key.name == key_val.name:
 			#handling non usual high key releasedn value
@@ -124,16 +122,20 @@ def key_to_dict(key_val, dictionary):
 				return dictionary[key]				
 			elif key_val.releasedn > temp_avg:#handling non usual high key releasedn value
 
-				print('starting variable emptying process')
+				print('Foundation variables are emptiying')
+
 				#emptying variables because of the non usual delay in keystroke
+				#this variables are emptying only through the delay if loop.
+				#it cannot be deleted on space key down because of key up lagging of previous key.
 				dict_time_args.clear()
 				dict_time_args[0] = [0.0, 0.0]
+
+				print('dict counter', dict_counter)
 
 				dict_counter.clear()
 				dict_counter['Space'] = 0
 				
 				counter[0] = 0
-				key_dict.clear()
 
 				#not changing any values because we think that the value can be wrong
 				return dictionary[key]

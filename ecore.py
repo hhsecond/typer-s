@@ -17,23 +17,15 @@ sdicti = mntree_struct.mntree()
 
 
 class checkdb(threading.Thread):
-    """docstring for writethread - its for writing the file at each one minute"""
+    """docstring for writethread - its for checcking the file at each 30 seconds"""
     def __init__(self):
         threading.Thread.__init__(self)
         self.start()
     def run(self):
     	global sdicti
     	while 1:
-	    	#print(score)
-	    	sap_counter = 0
-	    	totscore = 0
-	    	time.sleep(30)
-	    	for sap in score:
-	    		sap_counter += 1
-	    		totscore += sap
-	    	if sap_counter:
-		    	avgscore = totscore/sap_counter
-		    	print('average socre you have: ', avgscore)
+    		pass
+
 
 
 

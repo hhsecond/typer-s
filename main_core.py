@@ -39,11 +39,10 @@ def dict_from_file():
 			dicti.enter(key_dict)
 			key_dict.clear()
 	with open('typer-s\\typer.config', 'r+') as f:
-		data_to_config.clear()
 		for line in f:
 			line = line.split(':', 1)
 			data_to_config[str(line[0])] = float(line[1])
-	dicti.testprint()
+	#dicti.testprint()
 	try:
 		avg_time_params.append(data_to_config['average_hold_time'])
 		avg_time_params.append(data_to_config['average_release_time'])
@@ -56,7 +55,6 @@ def dict_from_file():
 
 def bspacing():
 	global prev_key, counter, dict_counter, dict_time_args, key_dict
-	print(key_dict)
 	if key_dict:
 		del dict_counter[prev_key.pop()]
 		del dict_time_args[counter[0]]

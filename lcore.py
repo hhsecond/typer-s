@@ -60,7 +60,6 @@ class objthread_down(threading.Thread):
 			#print('do', counter, event_name)
 			dict_time_args[counter[0]] = [etime]
 		else:
-			print(key_dict)
 			bspacing()
 
 
