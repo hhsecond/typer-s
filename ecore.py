@@ -24,7 +24,8 @@ class checkdb(threading.Thread):
     def run(self):
     	global sdicti
     	while 1:
-    		pass
+    		time.sleep(10)
+	    	print('scores are', sdicti.scores())
 
 
 

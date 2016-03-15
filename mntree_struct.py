@@ -48,6 +48,13 @@ class mntree(dict):
 		sdicti.enter(score_dict, 'advanced')
 		return sdicti
 
+	def scores(self):
+		final_score = {0:0, 1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0, 10:0}
+		find_final_score(self, final_score)
+		return final_score
+
+
+
 class check_key:
 	"""docstring for check_key - using for comapring old user with user in the database"""
 	def __init__(self, name):
@@ -99,8 +106,15 @@ def dict_to_file(dictionary):
 
 def printintheorder(dictionary):
 	for key in dictionary:
-		print(key.name)
+		print(key.name, ' : ', key.hold_score, ' : ', key.releasedn_score)
 		printintheorder(dictionary[key])
+def find_final_score(dictionary, final_score):
+	for key in dictionary:
+		print(key.name)
+		final_score[key.hold_score] += 1
+		final_score[key.releasedn_score] += 1
+		find_final_score(dictionary[key], final_score)
+
 
 def key_to_dict(key_val, dictionary):
 	global avg_time_params, prev_avg, dict_time_args, dict_counter
