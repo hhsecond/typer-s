@@ -6,5 +6,4 @@ key_dict = {}
 avg_time_params = [0.0, 0.0]
 data_to_config = {}
 prev_key = []
-prev_avg = []
-score = []
+

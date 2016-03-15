@@ -108,6 +108,7 @@ def printintheorder(dictionary):
 	for key in dictionary:
 		print(key.name, ' : ', key.hold_score, ' : ', key.releasedn_score)
 		printintheorder(dictionary[key])
+
 def find_final_score(dictionary, final_score):
 	for key in dictionary:
 		print(key.name)
@@ -117,7 +118,7 @@ def find_final_score(dictionary, final_score):
 
 
 def key_to_dict(key_val, dictionary):
-	global avg_time_params, prev_avg, dict_time_args, dict_counter
+	global avg_time_params, dict_time_args, dict_counter
 	for key in dictionary:
 		if key.name == key_val.name:
 			#handling non usual high key releasedn value

@@ -34,6 +34,9 @@ class writedb(threading.Thread):
 	    	with open('typer-s\\typerstree.tss', 'w+') as f:
 	    		f.write(data_to_file)
 	    		print('data printed')
+
+	    	#keeping data_to_config as a saperate datastructure for storing
+	    	#all the configuration infos that could come in future
 	    	data_to_config['average_hold_time'] = avg_time_params[0]
 	    	data_to_config['average_release_time'] = avg_time_params[1]
 	    	with open('typer-s\\typer.config', 'w+') as f:
