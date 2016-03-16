@@ -24,8 +24,13 @@ class checkdb(threading.Thread):
     def run(self):
     	global sdicti
     	while 1:
-    		time.sleep(10)
-	    	print('scores are', sdicti.scores())
+    		score_to_print = ''
+    		time.sleep(20)
+    		fscore = sdicti.scores()
+    		for key in fscore:
+    			if fscore[key] != [0,0]:
+    				score_to_print += str(key) + ' : ' + str(fscore[key]) + '\n'
+    		print('**************************current score*************************' + '\n' + score_to_print)
 
 
 

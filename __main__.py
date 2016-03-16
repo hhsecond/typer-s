@@ -26,6 +26,7 @@ def OnKeyboardEventexecU(event):
 
 
 def main():
+    global local_counter
     try:
         if sys.argv[1] == '-l':
             print('script started in listening mode')

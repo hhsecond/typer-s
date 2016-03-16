@@ -49,7 +49,8 @@ class mntree(dict):
 		return sdicti
 
 	def scores(self):
-		final_score = {0:0, 1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0, 10:0}
+		final_score = {0:[0,0], 1:[0,0], 2:[0,0], 3:[0,0], 4:[0,0], 5:[0,0], 6:[0,0], 7:[0,0], 8:[0,0], 9:[0,0], 10:[0,0]}
+		score_to_return = ''
 		find_final_score(self, final_score)
 		return final_score
 
@@ -111,9 +112,9 @@ def printintheorder(dictionary):
 
 def find_final_score(dictionary, final_score):
 	for key in dictionary:
-		print(key.name)
-		final_score[key.hold_score] += 1
-		final_score[key.releasedn_score] += 1
+		#print(key.name)
+		final_score[key.hold_score][0] += 1
+		final_score[key.releasedn_score][1] += 1
 		find_final_score(dictionary[key], final_score)
 
 
