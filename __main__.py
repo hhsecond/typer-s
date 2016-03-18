@@ -57,6 +57,7 @@ def main():
         elif sys.argv[1] == '-e':
             #writing db at each interval - currently not configured for execution mode
             #writedb()
+            #test
 
             #checking the tree for anomalies in the pattern
             ecore.checkdb()
