@@ -147,7 +147,7 @@ def key_to_dict(key_val, dictionary):
 				dict_time_args.clear()
 				dict_time_args[0] = [0.0, 0.0]
 
-				print('dict counter', dict_counter)
+				#print('dict counter', dict_counter)
 
 				dict_counter.clear()
 				dict_counter['Space'] = 0

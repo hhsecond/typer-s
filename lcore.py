@@ -13,8 +13,8 @@ import threading, time
 from settings import *
 from main_core import *
 
-
-
+total_key_count = 0
+bspace_count = 0
 
 class writedb(threading.Thread):
     """docstring for writethread - its for writing the file at each one minute"""
@@ -22,7 +22,7 @@ class writedb(threading.Thread):
         threading.Thread.__init__(self)
         self.start()
     def run(self):
-    	global avg_time_params, data_to_config, dicti
+    	global avg_time_params, data_to_config, dicti, lcorebspacepm
     	while 1:
 	    	time.sleep(60)
 	    	data_to_file = ''
@@ -39,9 +39,11 @@ class writedb(threading.Thread):
 	    	#all the configuration infos that could come in future
 	    	data_to_config['average_hold_time'] = avg_time_params[0]
 	    	data_to_config['average_release_time'] = avg_time_params[1]
+	    	data_to_config['back_space_factor'] = bspace_count/total_key_count #chances of zero division error
 	    	with open('typer-s\\typer.config', 'w+') as f:
 	    		for key, val in data_to_config.items():
 	    			f.write(str(key) + ':' + str(val) + '\n')
+	    			print(str(key) + ':' + str(val))
 
 
 
@@ -54,8 +56,9 @@ class objthread_down(threading.Thread):
 		self.event_time = event_time
 		self.start()
 	def run(self):
-		global prev_key, dict_counter, counter, dict_time_args
+		global prev_key, dict_counter, counter, dict_time_args, total_key_count, bspace_count
 		if self.event_name != 'Back':
+			total_key_count += 1
 			prev_key.append(self.event_name)
 			etime = self.event_time.timestamp()
 			counter[0] += 1
@@ -63,6 +66,7 @@ class objthread_down(threading.Thread):
 			#print('do', counter, event_name)
 			dict_time_args[counter[0]] = [etime]
 		else:
+			bspace_count += 1
 			bspacing()
 
 
@@ -78,7 +82,7 @@ class objthread_up(threading.Thread):
 		self.start()
 	def run(self):
 		if self.event_name != 'Back':
-			global avg_time_params, key_dict, dict_counter, dict_time_args, counter, dicti 
+			global avg_time_params, key_dict, dict_counter, dict_time_args, counter, dicti
 			etime = self.event_time.timestamp()
 			curr_count = dict_counter[self.event_name]
 			#print('up', curr_count, event_name)
