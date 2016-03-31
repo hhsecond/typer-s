@@ -63,11 +63,12 @@ class objthread_down(threading.Thread):
 			etime = self.event_time.timestamp()
 			counter[0] += 1
 			dict_counter[self.event_name] = counter[0]
-			#print('do', counter, event_name)
+			#print('do', counter, self.event_name)
 			dict_time_args[counter[0]] = [etime]
 		else:
 			bspace_count += 1
 			bspacing()
+			#print('backspace')
 
 
 
@@ -85,7 +86,7 @@ class objthread_up(threading.Thread):
 			global avg_time_params, key_dict, dict_counter, dict_time_args, counter, dicti
 			etime = self.event_time.timestamp()
 			curr_count = dict_counter[self.event_name]
-			#print('up', curr_count, event_name)
+			#print('up', curr_count, self.event_name)
 			dict_time_args[curr_count].append(etime)#for refering previous up time (not using now, for futureq)
 
 			curr_hold = etime - dict_time_args[curr_count][0]#curr_up_time - curr_down_time

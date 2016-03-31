@@ -26,6 +26,12 @@ class key:
 
 def dict_from_file():
 	global key_dict, data_to_config, dicti
+	with open('typer-s\\typer.config', 'r+') as f:
+		for line in f:
+			line = line.split(':', 1)
+			data_to_config[str(line[0])] = float(line[1])
+
+
 	with open('typer-s\\typerstree.tss', 'r+') as f:
 		for word in f:
 			i = 0
@@ -38,10 +44,6 @@ def dict_from_file():
 				i += 1
 			dicti.enter(key_dict)
 			key_dict.clear()
-	with open('typer-s\\typer.config', 'r+') as f:
-		for line in f:
-			line = line.split(':', 1)
-			data_to_config[str(line[0])] = float(line[1])
 	#dicti.testprint()
 	try:
 		avg_time_params.append(data_to_config['average_hold_time'])
