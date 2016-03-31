@@ -3,6 +3,9 @@ data_out_list = []
 score_dict = {}
 count_check = 0
 from settings import *
+from math import sqrt
+from statistics import stdev
+
 
 
 
@@ -14,12 +17,18 @@ class mntree(dict):
 	#usng same enter function for key insert and score insert by introducing new argument 'status'. It will be 'basic' always for key entry. 
 	#But different for score entry
 	def enter(self, key_dictionary, status = 'basic'):
+		global data_to_config
 		#fetching each key and sending to the dict create function
 		key_key = sorted(key_dictionary) #returns sorted key from dictionary as a list
 		dictionary = self
+		deviation_factor_list = []
 		if status == 'basic':
 			for key_key in key_key:
+				deviation_factor_list.append(key_dictionary[key_key].releasedn)
 				dictionary = key_to_dict(key_dictionary[key_key], dictionary) #returning dictionary recursively
+			#print(deviation_factor_list)
+			if len(deviation_factor_list) > 1:
+				find_deviation_factor(deviation_factor_list)
 		else:
 			for key_key in key_key:
 				#print(key_val.name)
@@ -119,11 +128,11 @@ def find_final_score(dictionary, final_score):
 
 
 def key_to_dict(key_val, dictionary):
-	global avg_time_params, dict_time_args, dict_counter
+	global avg_time_params, dict_time_args, dict_counter, data_to_config
 	for key in dictionary:
 		if key.name == key_val.name:
 			#handling non usual high key releasedn value
-			temp_avg = key.releasedn * 2
+			temp_avg = key.releasedn * data_to_config['deviation_factor']
 			key.hold = (key.hold + key_val.hold)/2
 
 			#handling cases with zero releasedn value 
@@ -139,7 +148,7 @@ def key_to_dict(key_val, dictionary):
 				return dictionary[key]				
 			elif key_val.releasedn > temp_avg:#handling non usual high key releasedn value
 
-				print('Foundation variables are emptiying')
+				#print('Foundation variables are emptiying')
 
 				#emptying variables because of the non usual delay in keystroke
 				#this variables are emptying only through the delay if loop.
@@ -174,3 +183,19 @@ def key_to_sdict(key_val, dictionary):
 			return dictionary[key]	
 	dictionary[key_val] = {}
 	return dictionary[key_val]
+
+
+def find_deviation_factor(releasedn_list):
+	global data_to_config
+	try:
+		curr_deviation_factor = data_to_config['deviation_factor']
+		#catching key error with deviation factor
+	except:
+		curr_deviation_factor = 0.0
+	summation = 0
+	#taking standard deviation (it is sample standard deviation, confirm this one or population)
+	deviation_factor = stdev(releasedn_list)
+	if curr_deviation_factor != 0.0:
+		deviation_factor = (deviation_factor + curr_deviation_factor)/2
+	data_to_config['deviation_factor'] = deviation_factor
+
