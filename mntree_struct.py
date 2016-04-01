@@ -7,7 +7,7 @@ from math import sqrt
 from statistics import stdev
 
 
-
+deviation_factor_list = []
 
 class mntree(dict):
 	"""docstring for mntree - defining the datastructure as a class"""
@@ -17,14 +17,12 @@ class mntree(dict):
 	#usng same enter function for key insert and score insert by introducing new argument 'status'. It will be 'basic' always for key entry. 
 	#But different for score entry
 	def enter(self, key_dictionary, status = 'basic'):
-		global data_to_config
+		global data_to_config, deviation_factor_list
 		#fetching each key and sending to the dict create function
 		key_key = sorted(key_dictionary) #returns sorted key from dictionary as a list
 		dictionary = self
-		deviation_factor_list = []
 		if status == 'basic':
 			for key_key in key_key:
-				deviation_factor_list.append(key_dictionary[key_key].releasedn)
 				dictionary = key_to_dict(key_dictionary[key_key], dictionary) #returning dictionary recursively
 			#print(deviation_factor_list)
 			if len(deviation_factor_list) > 1:
@@ -128,16 +126,18 @@ def find_final_score(dictionary, final_score):
 
 
 def key_to_dict(key_val, dictionary):
-	global avg_time_params, dict_time_args, dict_counter, data_to_config
+	global avg_time_params, dict_time_args, dict_counter, data_to_config, deviation_factor_list
 	for key in dictionary:
 		if key.name == key_val.name:
 			#handling non usual high key releasedn value
-			temp_avg = key.releasedn * data_to_config['deviation_factor']
+			deviation_range = [key.releasedn - data_to_config['deviation_factor'], key.releasedn + data_to_config['deviation_factor']]
+			global_deviation_range = [avg_time_params[1] - data_to_config['deviation_factor'], [avg_time_params[1] + data_to_config['deviation_factor']]
 			key.hold = (key.hold + key_val.hold)/2
 
 			#handling cases with zero releasedn value 
 			if key.releasedn == 0.0:
-				if key_val.releasedn <= avg_time_params[1]:
+				if global_deviation_range[0] <= key_val.releasedn <= global_deviation_range[1]:
+					deviation_factor_list.append(key_val.releasedn)
 					key.releasedn = key_val.releasedn#handling non usual high key releasedn value
 					avg_time_params[1] = (avg_time_params[1] + key.releasedn)/2
 					return dictionary[key]
@@ -146,9 +146,10 @@ def key_to_dict(key_val, dictionary):
 			elif key_val.releasedn == 0.0:
 				avg_time_params[1] = (avg_time_params[1] + key.releasedn)/2
 				return dictionary[key]				
-			elif key_val.releasedn > temp_avg:#handling non usual high key releasedn value
+			elif deviation_range[0] <= key_val.releasedn <= deviation_range[1]:#handling non usual high key releasedn value
+				deviation_factor_list.append(key_val.releasedn)
 
-				#print('Foundation variables are emptiying')
+				print('Foundation variables are emptiying')
 
 				#emptying variables because of the non usual delay in keystroke
 				#this variables are emptying only through the delay if loop.
@@ -186,6 +187,9 @@ def key_to_sdict(key_val, dictionary):
 
 
 def find_deviation_factor(releasedn_list):
+	'''function to find the deviation factor will be called only if the arguemnt has more than 1 item
+		deviation factor is finding using std deviation function in statistics module'''
+	#remove the exception handling and declare the dictionary with all the variables intially
 	global data_to_config
 	try:
 		curr_deviation_factor = data_to_config['deviation_factor']
@@ -193,6 +197,12 @@ def find_deviation_factor(releasedn_list):
 	except:
 		curr_deviation_factor = 0.0
 	summation = 0
+
+	#removing more scattered releasedn values
+	for i in range(0, len(releasedn_list)):
+		if releasedn_list[i] 
+
+
 	#taking standard deviation (it is sample standard deviation, confirm this one or population)
 	deviation_factor = stdev(releasedn_list)
 	if curr_deviation_factor != 0.0:
