@@ -1,4 +1,7 @@
 #typer-s
+#
+Visit http://hhsecond.github.io/typer-s/ for more details
+#
 ##Keyboard Dynamics - A better way to authenticate
 typer-s (s for secure) is a software piece written in python which is implemented on top of AI through ML to make your environment secure. I believe every one who is belonging to homo-sapiens has a unique pattern. It was difficult to implement an algorithm to analyze this complex pattern earlier. But as the advancement of technology we could make our path easier to the success. 
 #
