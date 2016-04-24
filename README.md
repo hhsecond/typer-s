@@ -9,3 +9,5 @@ Keyboard dynamics is a concept came and believed as an equivalent authentication
 #
 It is basically workingon 3 trees that has the primitive data collected when user types. Then it will process and take data to first stage. Working on the post processings after the first stage. Script development is approaching the completion of first release. Still working on the cleanin up process in comparision algorithm. Once the current development completes i have to incorporate the backspacking pattern anaysis. Then will move to testing. 
 Second release will consider the implementation of deep learning and neural networks.
+#
+expected to complete by APRIL end
