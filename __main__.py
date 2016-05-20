@@ -1,6 +1,6 @@
 import pythoncom, pyHook, datetime, threading, time, sys
 import lcore, ecore, main_core
-print('initializing the thread.....')
+print('initializing the thread...')
 time.sleep(.5)       
 
 

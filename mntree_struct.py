@@ -1,3 +1,11 @@
+#####################################################################################################################################
+##                       File defining all the datastructure required by this program. The major DS defining                       ##
+##                       are the backbone of the program.                                                                          ##
+##                                                              Author                                                             ##
+##                                                          Sherin Thomas                                                          ##
+##                                                    Github.com/hhsecond/typer-s                                                  ##
+#####################################################################################################################################
+
 word = []
 data_out_list = []
 score_dict = {}
